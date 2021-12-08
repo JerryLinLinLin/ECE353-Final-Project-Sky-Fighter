@@ -23,21 +23,6 @@ void Task_Console(void *pvParameters)
          */
         xQueueReceive(Queue_Console, &dir, portMAX_DELAY);
 
-
-
-        /* ADD CODE
-         * based on the message that was received, print out one of the following
-         * message to the UART.
-         *
-         *  "Task_Console: Joystick position - CENTER\n\r"
-         *  "Task_Console: Joystick position - LEFT\n\r"
-         *  "Task_Console: Joystick position - RIGHT\n\r"
-         *  "Task_Console: Joystick position - UP\n\r"
-         *  "Task_Console: Joystick position - DOWN\n\r"
-         *
-         * NOTE, the UART is only accessed in this task, so
-         * there is no need to use a semaphore for mutual exclusion of the UART.
-         */
         if (dir == JOYSTICK_DIR_CENTER) {
             printf("Task_Console: Joystick position - CENTER\n\r");
         }

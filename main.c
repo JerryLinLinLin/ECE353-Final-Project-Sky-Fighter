@@ -61,21 +61,21 @@ int main(void)
     );
 
     xTaskCreate
-    (   Task_Joystick_Timer,
-        "Task_Joystick_Timer",
+    (   Task_ADC_Joy_Acc_Timer,
+        "Task_ADC_Joy_Acc_Timer",
         configMINIMAL_STACK_SIZE,
         NULL,
         2,
-        &Task_Joystick_Timer_Handle
+        &Task_ADC_Joy_Acc_Timer_Handle
     );
 
     xTaskCreate
-    (   Task_Joystick_Bottom_Half,
-        "Task_Joystick",
+    (   Task_ADC_Joy_Acc_Bottom_Half,
+        "Task_ADC_Joy_Acc_Bottom_Half",
         configMINIMAL_STACK_SIZE,
         NULL,
         3,
-        &Task_Joystick_Bottom_Half_Handle
+        &Task_ADC_Joy_Acc_Bottom_Half_Handle
     );
 
 

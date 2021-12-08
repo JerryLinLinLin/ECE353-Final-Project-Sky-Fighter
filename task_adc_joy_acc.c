@@ -8,17 +8,21 @@
 #include <main.h>
 
 
- TaskHandle_t Task_Joystick_Bottom_Half_Handle;
- TaskHandle_t Task_Joystick_Timer_Handle;
+ TaskHandle_t Task_ADC_Joy_Acc_Bottom_Half_Handle;
+ TaskHandle_t Task_ADC_Joy_Acc_Timer_Handle;
 
  volatile uint32_t JOYSTICK_X_DIR = 0;
  volatile uint32_t JOYSTICK_Y_DIR = 0;
+
+ volatile uint32_t ACC_X_DIR = 0;
+ volatile uint32_t ACC_Y_DIR = 0;
+ volatile uint32_t ACC_Z_DIR = 0;
 
 
  /******************************************************************************
  * Used to start an ADC14 Conversion
  ******************************************************************************/
- void Task_Joystick_Timer(void *pvParameters)
+ void Task_ADC_Joy_Acc_Timer(void *pvParameters)
  {
      while(1)
      {
@@ -40,7 +44,7 @@
 /******************************************************************************
 * Bottom Half Task.  Examines the ADC data from the joystick on the MKII
 ******************************************************************************/
-void Task_Joystick_Bottom_Half(void *pvParameters)
+void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
 {
     JOYSTICK_DIR_t dir;
     JOYSTICK_DIR_t prev_dir = JOYSTICK_DIR_CENTER;
@@ -109,11 +113,15 @@ void ADC14_IRQHandler(void)
     JOYSTICK_X_DIR = ADC14->MEM[0]; // Read the value and clear the interrupt
     JOYSTICK_Y_DIR = ADC14->MEM[1]; // Read the value and clear the interrupt
 
+    ACC_X_DIR = ADC14->MEM[2];
+    ACC_Y_DIR = ADC14->MEM[3];
+    ACC_Z_DIR = ADC14->MEM[4];
+
 
     /* ADD CODE
      * Send a task notification to Task_Joystick_Bottom_Half
      */
-    vTaskNotifyGiveFromISR(Task_Joystick_Bottom_Half_Handle, &xHigherPriorityTaskWoken);
+    vTaskNotifyGiveFromISR(Task_ADC_Joy_Acc_Bottom_Half_Handle, &xHigherPriorityTaskWoken);
     portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 
 }
