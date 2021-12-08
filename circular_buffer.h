@@ -1,16 +1,15 @@
 /*
  * Circular_Buffer.h
  *
- *  Created on: Aug 25, 2020
- *      Author: Andres Quintanal Escandon
+ * Author: Hai Lin
  */
+
+#ifndef Circular_Buffer_H_
+#define Circular_Buffer_H_
 
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-
-#ifndef Circular_Buffer_H_
-#define Circular_Buffer_H_
 
 typedef struct {
     volatile uint32_t produce_count;

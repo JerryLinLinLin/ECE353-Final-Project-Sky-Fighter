@@ -1,9 +1,7 @@
 /*
  * circular_buffer.c
  *
- *  Created on: Aug 25, 2020
- *      Author:Andres Quintanal Escandon
- *
+ * Author: Hai Lin
  */
 
 #include "circular_buffer.h"
@@ -46,17 +44,17 @@ void circular_buffer_delete(Circular_Buffer * buffer)
 bool circular_buffer_add(Circular_Buffer *buffer, char c)
 {
   // If the circular buffer is full, return false.
-        if(circular_buffer_full(buffer)){
-            return false;
-        }
+    if (circular_buffer_full(buffer)) {
+        return false;
+    }
   // Add the data to the circular buffer
-
-        buffer->data[buffer->produce_count % buffer->max_size] = c;
-        buffer->produce_count++;
+    uint32_t produce_index = (buffer->produce_count) % (buffer->max_size);
+    (buffer->data)[produce_index] = c;
+    buffer->produce_count = (buffer->produce_count) + 1;
 
   // Return true to indicate that the data was added to the
   // circular buffer.
-        return true;
+    return true;
 
 }
 
@@ -75,17 +73,19 @@ char circular_buffer_remove(Circular_Buffer *buffer)
   char return_char;
 
   // If the circular buffer is empty, return 0.
-      if(circular_buffer_empty(buffer)){
-          return 0;
-      }
+  if (circular_buffer_empty(buffer)) {
+      return 0;
+  }
 
   // remove the character from the circular buffer
-      int abc = buffer->consume_count % buffer->max_size; // DELETE
-      return_char = buffer->data[buffer->consume_count % buffer->max_size];
-      buffer->consume_count++;
+  uint32_t consume_index = (buffer->consume_count) % (buffer->max_size);
+  return_char = (buffer->data)[consume_index];
+
+  buffer->consume_count = (buffer->consume_count) + 1;
 
   // return the character
-      return return_char;
+  return return_char;
+
 }
 
 //*****************************************************************************
@@ -96,7 +96,7 @@ char circular_buffer_remove(Circular_Buffer *buffer)
 //*****************************************************************************
 bool circular_buffer_empty(Circular_Buffer *buffer)
 {
-    if(buffer->produce_count == buffer->consume_count){
+    if (buffer->consume_count == buffer->produce_count) {
         return true;
     }
     return false;
@@ -110,7 +110,7 @@ bool circular_buffer_empty(Circular_Buffer *buffer)
 //*****************************************************************************
 bool circular_buffer_full(Circular_Buffer *buffer)
 {
-    if(buffer->produce_count - buffer->consume_count == buffer->max_size){
+    if ((buffer->produce_count - buffer->consume_count) == (buffer->max_size)){
         return true;
     }
     return false;
@@ -133,19 +133,23 @@ bool circular_buffer_full(Circular_Buffer *buffer)
 bool circular_buffer_test_0(uint16_t size)
 {
     Circular_Buffer *test_buffer;
-    int i;
-    char data;
+    int i ;
+    char data = 'a';
     bool return_status;
 
     // create a new circular buffer
     test_buffer = circular_buffer_init(size);
+
     // Using a for loop, Add the value of i to the circular buffer
     // until it is full.
     for(i = 0; i < size; i++)
     {
         // Add the next byte of data
-        // If the data was not added, return the circular buffer to the heap and return false
-        if(!circular_buffer_add(test_buffer, i)){
+        return_status = circular_buffer_add(test_buffer, data);
+
+        // If the data was not added, return the circular
+        // buffer to the heap and return false
+        if (!return_status) {
             circular_buffer_delete(test_buffer);
             return false;
         }
@@ -153,28 +157,21 @@ bool circular_buffer_test_0(uint16_t size)
 
     // Verify that the buffer is full. If it is not full
     // return the circular buffer to the heap and return false
-    if(!circular_buffer_full(test_buffer)){
-        circular_buffer_delete(test_buffer);
-        return false;
-    }
 
     // validate that you cannot add data to the circular buffer
     // after it is full.  If the return value is is equal to true,
     // return the circular buffer to the heap and return false.
-    if(circular_buffer_add(test_buffer, i)){
-        circular_buffer_delete(test_buffer);
-        return false;
-    }
 
     // remove the data from the circular buffer one byte at a time
     for(i = 0; i < size; i++)
     {
         // Remove the next byte of data
-        // Verify the value returned. If the value returned
+        char re_value = circular_buffer_remove(test_buffer);
+
+        // Verify that the value returned. If the value returned
         // is not correct, return the circular buffer to the heap
         // and return false
-
-        if(circular_buffer_remove(test_buffer) != i){
+        if (re_value == 0) {
             circular_buffer_delete(test_buffer);
             return false;
         }
@@ -182,7 +179,7 @@ bool circular_buffer_test_0(uint16_t size)
 
     // Verify that the buffer is empty. If it is not empty
     // return the circular buffer to the heap and return false
-    if(!circular_buffer_empty(test_buffer)){
+    if (!circular_buffer_empty(test_buffer)) {
         circular_buffer_delete(test_buffer);
         return false;
     }
@@ -192,6 +189,7 @@ bool circular_buffer_test_0(uint16_t size)
 
     // success!!
     return true;
+
 }
 
 

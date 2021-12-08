@@ -39,22 +39,19 @@ void Task_Console(void *pvParameters)
          * there is no need to use a semaphore for mutual exclusion of the UART.
          */
         if (dir == JOYSTICK_DIR_CENTER) {
-//            printf("Task_Console: Joystick position - CENTER\n\r");
-            ece353_rgb(false,false,true);
+            printf("Task_Console: Joystick position - CENTER\n\r");
         }
         if (dir == JOYSTICK_DIR_LEFT) {
-//            printf("Task_Console: Joystick position - LEFT\n\r");
-            ece353_rgb(false,true,false);
+            printf("Task_Console: Joystick position - LEFT\n\r");
         }
         if (dir == JOYSTICK_DIR_RIGHT) {
-//            printf("Task_Console: Joystick position - RIGHT\n\r");
-            ece353_rgb(true,false,false);
+            printf("Task_Console: Joystick position - RIGHT\n\r");
         }
         if (dir == JOYSTICK_DIR_UP) {
-//            printf("Task_Console: Joystick position - UP\n\r");
+            printf("Task_Console: Joystick position - UP\n\r");
         }
         if (dir == JOYSTICK_DIR_DOWN) {
-//            printf("Task_Console: Joystick position - DOWN\n\r");
+            printf("Task_Console: Joystick position - DOWN\n\r");
         }
     }
 }

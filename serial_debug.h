@@ -1,7 +1,7 @@
 /*
  * serial_debug.h
  *
- *      Author: Andres Quintanal Escandon
+ * Author: Hai Lin
  */
 
 #ifndef SERIAL_DEBUG_H_
@@ -10,9 +10,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-#include "circular_buffer.h"
 #include "msp.h"
-
+#include "circular_buffer.h"
 
 extern volatile char Rx_String[];
 extern volatile uint16_t Rx_Char_Count;
@@ -38,5 +37,4 @@ void serial_debug_put_string(char * s);
 int fputc(int c, FILE* stream);
 
 #endif /* SERIAL_DEBUG_H_ */
-
 

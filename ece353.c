@@ -322,25 +322,14 @@ void ece353_button1_wait_for_press(void)
  ******************************************************************************/
 void ece353_ADC14_PS2_XY_ACCELER_INI(void)
 {
-    // Configure the X direction of joystick
+    // Configure the X direction as an analog input pin.
     P6->SEL0 |= BIT0;
     P6->SEL1 |= BIT0;
 
-    // Configure the Y direction of joystick
+    // Configure the Y direction as an analog input pin.
+    // Configure the X direction as an analog input pin.
     P4->SEL0 |= BIT4;
     P4->SEL1 |= BIT4;
-
-//    // Configure the X direction of accelerometer
-//    P6->SEL0 |= BIT1;
-//    P6->SEL1 |= BIT1;
-//
-//    // Configure the Y direction of accelerometer
-//    P4->SEL0 |= BIT0;
-//    P4->SEL1 |= BIT0;
-//
-//    // Configure the Z direction of accelerometer
-//    P4->SEL0 |= BIT2;
-//    P4->SEL1 |= BIT2;
 
     // Configure CTL0 to sample 16-times in pulsed sample mode.
     // NEW -- Indicate that this is a sequence-of-channels.
@@ -349,22 +338,24 @@ void ece353_ADC14_PS2_XY_ACCELER_INI(void)
     // Configure ADC to return 12-bit values
     ADC14->CTL1 = ADC14_CTL1_RES_2;
 
-    // Joystick associated
+    // Associate the X direction analog signal with MEM[0]
     ADC14->MCTL[0] = ADC14_MCTLN_INCH_15;
-    ADC14->MCTL[1] = ADC14_MCTLN_INCH_9;
 
-    // acceler associated
-//    ADC14->MCTL[2] = ADC14_MCTLN_INCH_14;
-//    ADC14->MCTL[3] = ADC14_MCTLN_INCH_13;
-//    ADC14->MCTL[4] = ADC14_MCTLN_INCH_11;
+    // Associate the Y direction analog signal with MEM[1]
+    ADC14->MCTL[1] = ADC14_MCTLN_INCH_9;
 
     // NEW -- Make sure to indicate this is the end of a sequence.
     ADC14->MCTL[1] |= ADC14_MCTLN_EOS;
 
-//    ADC14->IER0 = ADC14_IER0_IE1;
-//
+    // Enable interrupts in the ADC AFTER a value is written into MEM[1].
+    //
+    // NEW: This is not the same as what is demonstrated in the example
+    // coding video.
+    ADC14->IER0 = ADC14_IER0_IE1;
+
     // Enable ADC Interrupt in the NVIC
     NVIC_EnableIRQ(ADC14_IRQn);
+    NVIC_SetPriority(ADC14_IRQn, 1);
 
     // Turn ADC ON
     ADC14->CTL0 |= ADC14_CTL0_ON;
@@ -391,11 +382,11 @@ void ece353_T32_1_Interrupt_Ms(uint16_t ms)
 
 // setup all
 void ece353_all_setup(void) {
-//    ece353_button1_init();
-//    ece353_button2_init();
-//    ece353_s1_s2_init();
+    ece353_button1_init();
+    ece353_button2_init();
+    ece353_s1_s2_init();
     ece353_rgb_init();
-//    ece353_MKII_RGB_IO_Init(false);
+    ece353_MKII_RGB_IO_Init(false);
     ece353_ADC14_PS2_XY_ACCELER_INI();
-//    serial_debug_init();
+    serial_debug_init();
 }

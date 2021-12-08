@@ -43,11 +43,11 @@ int main(void)
 
     __enable_irq();
 
-//    printf("\n\r");
-//    printf("*********************************************\n\r");
-//    printf("* ICE-16-Task-Notify\n\r");
-//    printf("*********************************************\n\r");
-//    printf("\n\r");
+    printf("\n\r");
+    printf("*********************************************\n\r");
+    printf("* ICE-16-Task-Notify\n\r");
+    printf("*********************************************\n\r");
+    printf("\n\r");
 
     Queue_Console = xQueueCreate(10,sizeof(uint32_t));
 

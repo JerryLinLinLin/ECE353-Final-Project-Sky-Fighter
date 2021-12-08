@@ -104,10 +104,11 @@ void ADC14_IRQHandler(void)
 {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
+    ece353_rgb(false,true,false);
+
     JOYSTICK_X_DIR = ADC14->MEM[0]; // Read the value and clear the interrupt
     JOYSTICK_Y_DIR = ADC14->MEM[1]; // Read the value and clear the interrupt
 
-    ece353_rgb(false,false,true);
 
     /* ADD CODE
      * Send a task notification to Task_Joystick_Bottom_Half
