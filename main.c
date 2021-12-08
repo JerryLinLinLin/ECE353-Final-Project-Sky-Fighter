@@ -42,6 +42,8 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
+#include "Base/lcd.h"
+
 TaskHandle_t Task_Blink_LED1_Handle = NULL;
 
 /* ****************************************************************************
