@@ -30,57 +30,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- *  ======== main_freertos.c ========
- */
-#include "msp.h"
-#include "msp432p401r.h"
-#include <stdint.h>
-#include <stdio.h>
-
-/* RTOS header files */
-#include <FreeRTOS.h>
-#include <task.h>
-
-#include "Base/lcd.h"
-
-TaskHandle_t Task_Blink_LED1_Handle = NULL;
-
-/* ****************************************************************************
- * This Function initializes the hardware required to blink LED1 on the
- * MSP432 Launchpad
- * ***************************************************************************/
-void blink_led1_hw_init(void)
-{
-    // set direction as an output
-    P1->DIR |= BIT0;
-
-    // Turn off LED
-    P1->OUT &= ~BIT0;
-}
-
-/******************************************************************************
-* Tasked used to blink LED1 on MSP432 Launchpad
-******************************************************************************/
-void Task_Blink_LED1(void *pvParameters)
-{
-    int i;
-    while(1)
-    {
-        // turn on the LED
-        P1->OUT |= BIT0;
-
-        // Delay
-        for(i=0; i < 1000000; i++){};
-
-        // turn off the LED
-        P1->OUT &= ~BIT0;
-
-        // Delay
-        for(i=0; i < 1000000; i++){};
-    }
-}
-
+#include "main.h"
 
 /*
  *  ======== main ========
@@ -89,15 +39,43 @@ int main(void)
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
 
-    blink_led1_hw_init();
+    ece353_all_setup();
+
+    __enable_irq();
+
+//    printf("\n\r");
+//    printf("*********************************************\n\r");
+//    printf("* ICE-16-Task-Notify\n\r");
+//    printf("*********************************************\n\r");
+//    printf("\n\r");
+
+    Queue_Console = xQueueCreate(10,sizeof(uint32_t));
 
     xTaskCreate
-    (   Task_Blink_LED1,
-        "LED1 Blink Task",
+    (   Task_Console,
+        "Task_Console",
         configMINIMAL_STACK_SIZE,
         NULL,
         1,
-        &Task_Blink_LED1_Handle
+        &Task_Console_Handle
+    );
+
+    xTaskCreate
+    (   Task_Joystick_Timer,
+        "Task_Joystick_Timer",
+        configMINIMAL_STACK_SIZE,
+        NULL,
+        2,
+        &Task_Joystick_Timer_Handle
+    );
+
+    xTaskCreate
+    (   Task_Joystick_Bottom_Half,
+        "Task_Joystick",
+        configMINIMAL_STACK_SIZE,
+        NULL,
+        3,
+        &Task_Joystick_Bottom_Half_Handle
     );
 
 

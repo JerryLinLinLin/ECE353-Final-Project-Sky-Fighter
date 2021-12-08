@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "msp.h"
+#include "serial_debug.h"
 
 // include IO setup for each device
 // comments are only in source file c for tidiness

@@ -177,6 +177,10 @@ void ece353_MKII_RGB_IO_Init(bool en_primary_function)
 
     }
 
+    P2->OUT &= ~BIT6;
+    P2->OUT &= ~BIT4;
+    P5->OUT &= ~BIT6;
+
 }
 
 /*****************************************************
@@ -326,17 +330,17 @@ void ece353_ADC14_PS2_XY_ACCELER_INI(void)
     P4->SEL0 |= BIT4;
     P4->SEL1 |= BIT4;
 
-    // Configure the X direction of accelerometer
-    P6->SEL0 |= BIT1;
-    P6->SEL1 |= BIT1;
-
-    // Configure the Y direction of accelerometer
-    P4->SEL0 |= BIT0;
-    P4->SEL1 |= BIT0;
-
-    // Configure the Z direction of accelerometer
-    P4->SEL0 |= BIT2;
-    P4->SEL1 |= BIT2;
+//    // Configure the X direction of accelerometer
+//    P6->SEL0 |= BIT1;
+//    P6->SEL1 |= BIT1;
+//
+//    // Configure the Y direction of accelerometer
+//    P4->SEL0 |= BIT0;
+//    P4->SEL1 |= BIT0;
+//
+//    // Configure the Z direction of accelerometer
+//    P4->SEL0 |= BIT2;
+//    P4->SEL1 |= BIT2;
 
     // Configure CTL0 to sample 16-times in pulsed sample mode.
     // NEW -- Indicate that this is a sequence-of-channels.
@@ -350,17 +354,17 @@ void ece353_ADC14_PS2_XY_ACCELER_INI(void)
     ADC14->MCTL[1] = ADC14_MCTLN_INCH_9;
 
     // acceler associated
-    ADC14->MCTL[2] = ADC14_MCTLN_INCH_14;
-    ADC14->MCTL[3] = ADC14_MCTLN_INCH_13;
-    ADC14->MCTL[4] = ADC14_MCTLN_INCH_11;
+//    ADC14->MCTL[2] = ADC14_MCTLN_INCH_14;
+//    ADC14->MCTL[3] = ADC14_MCTLN_INCH_13;
+//    ADC14->MCTL[4] = ADC14_MCTLN_INCH_11;
 
     // NEW -- Make sure to indicate this is the end of a sequence.
-    ADC14->MCTL[4] |= ADC14_MCTLN_EOS;
+    ADC14->MCTL[1] |= ADC14_MCTLN_EOS;
 
-////    ADC14->IER0 = ADC14_IER0_IE1;
+//    ADC14->IER0 = ADC14_IER0_IE1;
 //
-//    // Enable ADC Interrupt in the NVIC
-//    NVIC_EnableIRQ(ADC14_IRQn);
+    // Enable ADC Interrupt in the NVIC
+    NVIC_EnableIRQ(ADC14_IRQn);
 
     // Turn ADC ON
     ADC14->CTL0 |= ADC14_CTL0_ON;
@@ -387,10 +391,11 @@ void ece353_T32_1_Interrupt_Ms(uint16_t ms)
 
 // setup all
 void ece353_all_setup(void) {
-    ece353_button1_init();
-    ece353_button2_init();
-    ece353_s1_s2_init();
+//    ece353_button1_init();
+//    ece353_button2_init();
+//    ece353_s1_s2_init();
     ece353_rgb_init();
-    ece353_MKII_RGB_IO_Init(false);
+//    ece353_MKII_RGB_IO_Init(false);
     ece353_ADC14_PS2_XY_ACCELER_INI();
+//    serial_debug_init();
 }
