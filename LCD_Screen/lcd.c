@@ -5,7 +5,6 @@
  *      Author: Andres Quintanal Escandon
  */
 
-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
 #include "lcd.h"
 
 /* ****************************************************************************
