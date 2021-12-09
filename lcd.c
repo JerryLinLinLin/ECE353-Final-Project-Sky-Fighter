@@ -385,7 +385,7 @@ void lcd_draw_animation(
           Crystalfontz128x128_SetDrawFrame(x1, y0, x1 + step, y1);
           HAL_LCD_writeCommand(CM_RAMWR);
           for (i = 0; i < step; i++) {
-              for (j = 0; j < image_height_pixels + 10; j++) {
+              for (j = 0; j < (y1 - y0) * 2; j++) {
                   HAL_LCD_writeData(bColor >> 8);
                   HAL_LCD_writeData(bColor);
               }
@@ -395,7 +395,7 @@ void lcd_draw_animation(
           Crystalfontz128x128_SetDrawFrame(x0 - step, y0, x0, y1);
           HAL_LCD_writeCommand(CM_RAMWR);
           for (i = 0; i < step; i++) {
-              for (j = 0; j < image_height_pixels + 10; j++) {
+              for (j = 0; j < (y1 - y0) * 2; j++) {
                   HAL_LCD_writeData(bColor >> 8);
                   HAL_LCD_writeData(bColor);
               }
@@ -405,7 +405,7 @@ void lcd_draw_animation(
           Crystalfontz128x128_SetDrawFrame(x0, y1, x1, y1 + step);
           HAL_LCD_writeCommand(CM_RAMWR);
           for (i = 0; i < step; i++) {
-              for (j = 0; j < image_width_pixels + 10; j++) {
+              for (j = 0; j < (x1 - x0) * 2; j++) {
                   HAL_LCD_writeData(bColor >> 8);
                   HAL_LCD_writeData(bColor);
               }
@@ -415,7 +415,7 @@ void lcd_draw_animation(
           Crystalfontz128x128_SetDrawFrame(x0, y0 - step, x1, y0);
           HAL_LCD_writeCommand(CM_RAMWR);
           for (i = 0; i < step; i++) {
-              for (j = 0; j < image_width_pixels + 10; j++) {
+              for (j = 0; j < (x1 - x0) * 2; j++) {
                   HAL_LCD_writeData(bColor >> 8);
                   HAL_LCD_writeData(bColor);
               }

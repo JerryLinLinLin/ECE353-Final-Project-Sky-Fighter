@@ -17,6 +17,8 @@ TaskHandle_t Task_Game_Host_Handle;
 #define FG_COLOR (RED_5 << 11)
 #define BG_COLOR BLACK
 
+
+
 /******************************************************************************
 * Task used to print out messages to the console
 ******************************************************************************/
@@ -60,69 +62,83 @@ void Task_Game_Host(void *pvParameters)
         {
             continue;
         }
+
         if (current.joy == JOYSTICK_DIR_LEFT)
         {
             if (!((i < 1 || i > 126) || (j < 1 || j > 126)))
             {
-                i = i - 1;
-                lcd_draw_image(
-                  i,
-                  j,
-                  wisconsinWidthPixels,
-                  wisconsinHeightPixels,
-                  wisconsinBitmaps,
-                  FG_COLOR,
-                  BG_COLOR
-                );
+                xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
+                i = i - 5;
+                lcd_draw_animation(
+                        i,
+                        j,
+                        wisconsinWidthPixels,
+                        wisconsinHeightPixels,
+                        wisconsinBitmaps,
+                        FG_COLOR,
+                        BG_COLOR,
+                       5,
+                        MOVE_DIR_LEFT);
+                xSemaphoreGive(Sem_RENDER);
             }
+
 
         }
         if (current.joy == JOYSTICK_DIR_RIGHT)
         {
             if (!((i < 1 || i > 126) || (j < 1 || j > 126)))
             {
-                i = i + 1;
-                lcd_draw_image(
-                  i,
-                  j,
-                  wisconsinWidthPixels,
-                  wisconsinHeightPixels,
-                  wisconsinBitmaps,
-                  FG_COLOR,
-                  BG_COLOR
-                );
+                xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
+                i = i + 5;
+                lcd_draw_animation(
+                        i,
+                        j,
+                        wisconsinWidthPixels,
+                        wisconsinHeightPixels,
+                        wisconsinBitmaps,
+                        FG_COLOR,
+                        BG_COLOR,
+                       5,
+                       MOVE_DIR_RIGHT);
+                xSemaphoreGive(Sem_RENDER);
             }
         }
         if (current.joy == JOYSTICK_DIR_UP)
         {
             if (!((i < 1 || i > 126) || (j < 1 || j > 126)))
             {
-                j = j - 1;
-                lcd_draw_image(
-                  i,
-                  j,
-                  wisconsinWidthPixels,
-                  wisconsinHeightPixels,
-                  wisconsinBitmaps,
-                  FG_COLOR,
-                  BG_COLOR
-                );
+                xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
+                j = j - 5;
+                lcd_draw_animation(
+                        i,
+                        j,
+                        wisconsinWidthPixels,
+                        wisconsinHeightPixels,
+                        wisconsinBitmaps,
+                        FG_COLOR,
+                        BG_COLOR,
+                        5,
+                        MOVE_DIR_UP);
+                xSemaphoreGive(Sem_RENDER);
             }
         }
         if (current.joy == JOYSTICK_DIR_DOWN)
         {
             if (!((i < 1 || i > 126) || (j < 1 || j > 126)))
             {
-                j = j + 1;
-                lcd_draw_image(
-                  i,
-                  j,
-                  wisconsinWidthPixels,
-                  wisconsinHeightPixels,
-                  wisconsinBitmaps,
-                  FG_COLOR,
-                  BG_COLOR
-                );
+                xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
+                j = j + 5;
+                lcd_draw_animation(
+                        i,
+                        j,
+                        wisconsinWidthPixels,
+                        wisconsinHeightPixels,
+                        wisconsinBitmaps,
+                        FG_COLOR,
+                        BG_COLOR,
+                       5,
+                       MOVE_DIR_DOWN);
+                xSemaphoreGive(Sem_RENDER);
             }
         }
 

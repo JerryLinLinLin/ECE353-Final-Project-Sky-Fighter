@@ -52,6 +52,9 @@ int main(void)
     Queue_Console = xQueueCreate(10,sizeof(ADC_joy_acc_dir));
     Queue_Game_Host = xQueueCreate(10,sizeof(ADC_joy_acc_dir));
 
+    Sem_RENDER = xSemaphoreCreateBinary();
+    xSemaphoreGive(Sem_RENDER);
+
     xTaskCreate
     (   Task_Console,
         "Task_Console",

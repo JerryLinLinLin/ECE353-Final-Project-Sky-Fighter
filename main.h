@@ -27,6 +27,7 @@
 #include <task_game_host.h>
 #include <image.h>
 
+SemaphoreHandle_t Sem_RENDER;
 
 
 #endif /* MAIN_H_ */
