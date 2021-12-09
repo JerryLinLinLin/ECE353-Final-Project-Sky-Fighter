@@ -10,9 +10,9 @@
 
 #include <stdint.h>
 
-extern const uint8_t wisconsinBitmaps[];
-extern const uint8_t wisconsinWidthPixels;
-extern const uint8_t wisconsinHeightPixels;
+extern const uint8_t jet_fighterBitmaps[];
+extern const uint8_t jet_fighterWidthPixels;
+extern const uint8_t jet_fighterHeightPixels;
 
 
 #endif /* IMAGE_H_ */

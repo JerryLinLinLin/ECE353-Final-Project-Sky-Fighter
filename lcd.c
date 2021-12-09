@@ -367,17 +367,9 @@ void lcd_draw_animation(
 
     x0_ = x_start - (image_width_pixels/2);
     x1_ = x_start + (image_width_pixels/2);
-    if( (image_width_pixels & 0x01) == 0x00)
-    {
-        x1_--;
-    }
 
     y0_ = y_start  - (image_height_pixels/2);
     y1_ = y_start  + (image_height_pixels/2) ;
-    if( (image_height_pixels & 0x01) == 0x00)
-    {
-        y1_--;
-    }
 
     if (x0_ < 2 || x1_ > 126 || y0_ < 2 || y1_ > 126) {
         return;

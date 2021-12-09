@@ -24,15 +24,15 @@ TaskHandle_t Task_Game_Host_Handle;
 ******************************************************************************/
 void Task_Game_Host(void *pvParameters)
 {
-    int i = 64;
-    int j = 64;
+    LOCATION jet_loc = {.x = 64, .y = 64, .height = jet_fighterHeightPixels,
+                        .width = jet_fighterWidthPixels};
 
     lcd_draw_image(
-      i,
-      j,
-      wisconsinWidthPixels,
-      wisconsinHeightPixels,
-      wisconsinBitmaps,
+            jet_loc.x,
+            jet_loc.y,
+      jet_fighterWidthPixels,
+      jet_fighterHeightPixels,
+      jet_fighterBitmaps,
       FG_COLOR,
       BG_COLOR
     );
@@ -41,99 +41,80 @@ void Task_Game_Host(void *pvParameters)
 
     while(1)
     {
-//        current.joy = JOYSTICK_DIR_LEFT;
-//        current.joy_is_changed = true;
 
         xQueueReceive(Queue_Game_Host, &current, 1);
 
-//        lcd_draw_animation(
-//                i - 20,
-//                j,
-//                wisconsinWidthPixels,
-//                wisconsinHeightPixels,
-//                wisconsinBitmaps,
-//                FG_COLOR,
-//                BG_COLOR,
-//               20,
-//                MOVE_DIR_LEFT);
 
-
-            if (current.joy == JOYSTICK_DIR_CENTER)
+        if (current.acc == ACC_DIR_LEFT)
         {
-            continue;
+            jet_loc.x--;
         }
-
-        if (current.joy == JOYSTICK_DIR_LEFT)
+        if (current.acc == ACC_DIR_RIGHT)
+        {
+            jet_loc.x++;
+        }
+        if (current.acc == ACC_DIR_UP)
         {
 
-                xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
-                i = i - 5;
-                lcd_draw_animation(
-                        i,
-                        j,
-                        wisconsinWidthPixels,
-                        wisconsinHeightPixels,
-                        wisconsinBitmaps,
-                        FG_COLOR,
-                        BG_COLOR,
-                       5,
-                        MOVE_DIR_LEFT);
-                xSemaphoreGive(Sem_RENDER);
-
-
+            jet_loc.y--;
         }
-        if (current.joy == JOYSTICK_DIR_RIGHT)
+        if (current.acc == ACC_DIR_DOWN)
         {
-                xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
-                i = i + 5;
-                lcd_draw_animation(
-                        i,
-                        j,
-                        wisconsinWidthPixels,
-                        wisconsinHeightPixels,
-                        wisconsinBitmaps,
-                        FG_COLOR,
-                        BG_COLOR,
-                       5,
-                       MOVE_DIR_RIGHT);
-                xSemaphoreGive(Sem_RENDER);
-        }
-        if (current.joy == JOYSTICK_DIR_UP)
-        {
-                xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
-                j = j - 5;
-                lcd_draw_animation(
-                        i,
-                        j,
-                        wisconsinWidthPixels,
-                        wisconsinHeightPixels,
-                        wisconsinBitmaps,
-                        FG_COLOR,
-                        BG_COLOR,
-                        5,
-                        MOVE_DIR_UP);
-                xSemaphoreGive(Sem_RENDER);
-        }
-        if (current.joy == JOYSTICK_DIR_DOWN)
-        {
-                xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
-                j = j + 5;
-                lcd_draw_animation(
-                        i,
-                        j,
-                        wisconsinWidthPixels,
-                        wisconsinHeightPixels,
-                        wisconsinBitmaps,
-                        FG_COLOR,
-                        BG_COLOR,
-                       5,
-                       MOVE_DIR_DOWN);
-                xSemaphoreGive(Sem_RENDER);
+            jet_loc.y++;
         }
 
-//            vTaskDelay(pdMS_TO_TICKS(10));
+        jet_loc = boarder_range_validate(jet_loc);
+
+        xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
+        lcd_draw_image(
+          jet_loc.x,
+          jet_loc.y,
+          jet_loc.width,
+          jet_loc.height,
+          jet_fighterBitmaps,
+          FG_COLOR,
+          BG_COLOR
+        );
+        xSemaphoreGive(Sem_RENDER);
+        vTaskDelay(pdMS_TO_TICKS(5));
 
     }
+}
+
+LOCATION boarder_range_validate(LOCATION loc) {
+
+    LOCATION current;
+    current.height = loc.height;
+    current.width = loc.width;
+    current.x = loc.x;
+    current.y = loc.y;
+
+    int x0, x1, y0, y1;
+
+    x0 = loc.x - (loc.width/2);
+    x1 = loc.x + (loc.width/2);
+
+    y0 = loc.y  - (loc.height/2);
+    y1 = loc.y  + (loc.height/2);
+
+    if (x0 < 2) {
+        int exceed = 2- x0;
+        current.x = loc.x + exceed;
+    }
+    if (y0 < 2) {
+        int exceed = 2- y0;
+        current.y = loc.y + exceed;
+    }
+    if (x1 > 126) {
+        int exceed = x1 - 126;
+        current.x = loc.x - exceed;
+    }
+    if (y1 > 126) {
+        int exceed = y1 - 126;
+        current.y = loc.y - exceed;
+    }
+
+    return current;
 }
 
 

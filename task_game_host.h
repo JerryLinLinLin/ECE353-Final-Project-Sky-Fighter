@@ -13,10 +13,20 @@
 extern QueueHandle_t Queue_Game_Host;
 extern TaskHandle_t Task_Game_Host_Handle;
 
+typedef struct
+{
+    int x;
+    int y;
+    int height;
+    int width;
+} LOCATION;
+
 /******************************************************************************
 * Task used to print out messages to the console
 ******************************************************************************/
 void Task_Game_Host(void *pvParameters);
+
+LOCATION boarder_range_validate(LOCATION loc);
 
 
 
