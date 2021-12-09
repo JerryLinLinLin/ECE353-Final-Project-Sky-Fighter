@@ -45,7 +45,7 @@ int main(void)
 
     printf("\n\r");
     printf("*********************************************\n\r");
-    printf("* ICE-16-Task-Notify\n\r");
+    printf("ECE 353 Final Project \n\r");
     printf("*********************************************\n\r");
     printf("\n\r");
 

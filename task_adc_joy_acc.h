@@ -42,6 +42,8 @@ typedef struct
 {
     JOYSTICK_DIR_t joy;
     ACC_DIR_t acc;
+    bool joy_is_changed;
+    bool acc_is_changed;
 } ADC_joy_acc_dir;
 
 /******************************************************************************

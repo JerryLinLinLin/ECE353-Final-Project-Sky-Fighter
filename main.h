@@ -22,6 +22,8 @@
 #include <ece353.h>
 #include <task_adc_joy_acc.h>
 #include <task_console.h>
+#include <task_renderer.h>
+#include <task_game_host.h>
 
 
 

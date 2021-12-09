@@ -62,6 +62,7 @@ void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
 
         ADC_joy_acc_dir current;
 
+        // joystick
         if(JOYSTICK_X_DIR < VOLT_0P85)
         {
            joy_dir = JOYSTICK_DIR_LEFT;
@@ -83,11 +84,12 @@ void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
             joy_dir = JOYSTICK_DIR_CENTER;
         }
 
-        if((ACC_X_DIR > (VOLT_2P31 - (ACC_RANGE * 2))) &&  (ACC_X_DIR < (VOLT_2P31 + (ACC_RANGE * 2))))
+        // accelerometer
+        if((ACC_X_DIR > (VOLT_2P31 - (ACC_RANGE * 3))) &&  (ACC_X_DIR < (VOLT_2P31 + (ACC_RANGE * 3))))
         {
            acc_dir = ACC_DIR_RIGHT;
         }
-        else if((ACC_X_DIR > (VOLT_0P99 - (ACC_RANGE * 2))) &&  (ACC_X_DIR < (VOLT_0P99 + (ACC_RANGE * 2))))
+        else if((ACC_X_DIR > (VOLT_0P99 - (ACC_RANGE * 3))) &&  (ACC_X_DIR < (VOLT_0P99 + (ACC_RANGE * 3))))
         {
             acc_dir = ACC_DIR_LEFT;
         }
@@ -104,14 +106,16 @@ void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
             acc_dir = ACC_DIR_CENTER;
         }
 
+        // save data
         current.joy = joy_dir;
         current.acc = acc_dir;
 
-        /* ADD CODE
-         * Send dir to Queue_Console if the the current direction
-         * of the joystick does not match the previous direction of the joystick
-         */
-        if (joy_dir != joy_prev_dir || acc_dir != acc_prev_dir) {
+        // mark if changed
+        current.joy_is_changed = joy_dir != joy_prev_dir;
+        current.acc_is_changed = acc_dir != acc_prev_dir;
+
+        // send
+        if (current.joy_is_changed || current.acc_is_changed) {
             xQueueSendToBack(Queue_Console, &current, portMAX_DELAY);
         }
 
@@ -132,17 +136,15 @@ void ADC14_IRQHandler(void)
 {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-    ece353_rgb(false,true,false);
-
-    JOYSTICK_X_DIR = ADC14->MEM[0]; // Read the value and clear the interrupt
-    JOYSTICK_Y_DIR = ADC14->MEM[1]; // Read the value and clear the interrupt
+    JOYSTICK_X_DIR = ADC14->MEM[0];
+    JOYSTICK_Y_DIR = ADC14->MEM[1];
 
     ACC_X_DIR = ADC14->MEM[2];
     ACC_Y_DIR = ADC14->MEM[3];
     ACC_Z_DIR = ADC14->MEM[4];
 
 
-    /* ADD CODE
+    /*
      * Send a task notification to Task_Joystick_Bottom_Half
      */
     vTaskNotifyGiveFromISR(Task_ADC_Joy_Acc_Bottom_Half_Handle, &xHigherPriorityTaskWoken);
