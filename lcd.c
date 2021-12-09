@@ -349,8 +349,8 @@ void lcd_draw_image(
  * Draw the animation. Set previous frame to bcolor and draw image at new coord
  */
 void lcd_draw_animation(
-        uint16_t x_start,
-        uint16_t y_start,
+        int x_start,
+        int y_start,
         uint16_t image_width_pixels,
         uint16_t image_height_pixels,
         const uint8_t *image,
@@ -360,12 +360,37 @@ void lcd_draw_animation(
         MOVE_DIR move_dir
         )
 {
+    int x0_;
+    int x1_;
+    int y0_;
+    int y1_;
+
+    x0_ = x_start - (image_width_pixels/2);
+    x1_ = x_start + (image_width_pixels/2);
+    if( (image_width_pixels & 0x01) == 0x00)
+    {
+        x1_--;
+    }
+
+    y0_ = y_start  - (image_height_pixels/2);
+    y1_ = y_start  + (image_height_pixels/2) ;
+    if( (image_height_pixels & 0x01) == 0x00)
+    {
+        y1_--;
+    }
+
+    if (x0_ < 2 || x1_ > 126 || y0_ < 2 || y1_ > 126) {
+        return;
+    }
+
+
       uint16_t i, j;
 
       uint16_t x0;
       uint16_t x1;
       uint16_t y0;
       uint16_t y1;
+
 
       x0 = x_start - (image_width_pixels/2);
       x1 = x_start + (image_width_pixels/2);
@@ -380,6 +405,10 @@ void lcd_draw_animation(
       {
           y1--;
       }
+
+
+
+
 
       if (move_dir == MOVE_DIR_LEFT) {
           Crystalfontz128x128_SetDrawFrame(x1, y0, x1 + step, y1);

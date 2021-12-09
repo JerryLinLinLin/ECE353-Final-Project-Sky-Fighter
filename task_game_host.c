@@ -65,8 +65,7 @@ void Task_Game_Host(void *pvParameters)
 
         if (current.joy == JOYSTICK_DIR_LEFT)
         {
-            if (!((i < 1 || i > 126) || (j < 1 || j > 126)))
-            {
+
                 xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
                 i = i - 5;
                 lcd_draw_animation(
@@ -80,14 +79,11 @@ void Task_Game_Host(void *pvParameters)
                        5,
                         MOVE_DIR_LEFT);
                 xSemaphoreGive(Sem_RENDER);
-            }
 
 
         }
         if (current.joy == JOYSTICK_DIR_RIGHT)
         {
-            if (!((i < 1 || i > 126) || (j < 1 || j > 126)))
-            {
                 xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
                 i = i + 5;
                 lcd_draw_animation(
@@ -101,12 +97,9 @@ void Task_Game_Host(void *pvParameters)
                        5,
                        MOVE_DIR_RIGHT);
                 xSemaphoreGive(Sem_RENDER);
-            }
         }
         if (current.joy == JOYSTICK_DIR_UP)
         {
-            if (!((i < 1 || i > 126) || (j < 1 || j > 126)))
-            {
                 xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
                 j = j - 5;
                 lcd_draw_animation(
@@ -120,12 +113,9 @@ void Task_Game_Host(void *pvParameters)
                         5,
                         MOVE_DIR_UP);
                 xSemaphoreGive(Sem_RENDER);
-            }
         }
         if (current.joy == JOYSTICK_DIR_DOWN)
         {
-            if (!((i < 1 || i > 126) || (j < 1 || j > 126)))
-            {
                 xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
                 j = j + 5;
                 lcd_draw_animation(
@@ -139,7 +129,6 @@ void Task_Game_Host(void *pvParameters)
                        5,
                        MOVE_DIR_DOWN);
                 xSemaphoreGive(Sem_RENDER);
-            }
         }
 
 //            vTaskDelay(pdMS_TO_TICKS(10));

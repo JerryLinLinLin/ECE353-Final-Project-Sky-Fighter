@@ -136,8 +136,8 @@ void lcd_draw_image(
 );
 
 void lcd_draw_animation(
-        uint16_t x_start,
-        uint16_t y_start,
+        int x_start,
+        int y_start,
         uint16_t image_width_pixels,
         uint16_t image_height_pixels,
         const uint8_t *image,
