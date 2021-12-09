@@ -46,8 +46,11 @@
 ******************************************************************************/
 void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
 {
-    JOYSTICK_DIR_t dir;
-    JOYSTICK_DIR_t prev_dir = JOYSTICK_DIR_CENTER;
+    JOYSTICK_DIR_t joy_dir;
+    JOYSTICK_DIR_t joy_prev_dir = JOYSTICK_DIR_CENTER;
+
+    ACC_DIR_t acc_dir;
+    ACC_DIR_t acc_prev_dir = ACC_DIR_CENTER;
 
 
     while(1)
@@ -57,46 +60,67 @@ void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
          */
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
+        ADC_joy_acc_dir current;
 
-        /*
-         * Set the dir variable to one of the following values based
-         * on the values of JOYSTICK_X_DIR and JOYSTIC_Y_DIR
-         */
         if(JOYSTICK_X_DIR < VOLT_0P85)
         {
-           dir = JOYSTICK_DIR_LEFT;
+           joy_dir = JOYSTICK_DIR_LEFT;
         }
         else if(JOYSTICK_X_DIR > VOLT_2P50)
         {
-            dir = JOYSTICK_DIR_RIGHT;
+            joy_dir = JOYSTICK_DIR_RIGHT;
         }
         else if(JOYSTICK_Y_DIR < VOLT_0P85)
         {
-            dir = JOYSTICK_DIR_DOWN;
+            joy_dir = JOYSTICK_DIR_DOWN;
         }
         else if(JOYSTICK_Y_DIR > VOLT_2P50)
         {
-            dir = JOYSTICK_DIR_UP;
+            joy_dir = JOYSTICK_DIR_UP;
         }
         else
         {
-            dir = JOYSTICK_DIR_CENTER;
+            joy_dir = JOYSTICK_DIR_CENTER;
         }
 
+        if((ACC_X_DIR > (VOLT_2P31 - (ACC_RANGE * 2))) &&  (ACC_X_DIR < (VOLT_2P31 + (ACC_RANGE * 2))))
+        {
+           acc_dir = ACC_DIR_RIGHT;
+        }
+        else if((ACC_X_DIR > (VOLT_0P99 - (ACC_RANGE * 2))) &&  (ACC_X_DIR < (VOLT_0P99 + (ACC_RANGE * 2))))
+        {
+            acc_dir = ACC_DIR_LEFT;
+        }
+        else if((ACC_Z_DIR > (VOLT_2P31 - ACC_RANGE)) &&  (ACC_Z_DIR < (VOLT_2P31 + ACC_RANGE)))
+        {
+            acc_dir = ACC_DIR_UP;
+        }
+        else if((ACC_Z_DIR > (VOLT_0P99 - ACC_RANGE)) &&  (ACC_Z_DIR < (VOLT_0P99 + ACC_RANGE)))
+        {
+            acc_dir = ACC_DIR_DOWN;
+        }
+        else
+        {
+            acc_dir = ACC_DIR_CENTER;
+        }
+
+        current.joy = joy_dir;
+        current.acc = acc_dir;
 
         /* ADD CODE
          * Send dir to Queue_Console if the the current direction
          * of the joystick does not match the previous direction of the joystick
          */
-        if (dir != prev_dir) {
-            xQueueSendToBack(Queue_Console, &dir, portMAX_DELAY);
+        if (joy_dir != joy_prev_dir || acc_dir != acc_prev_dir) {
+            xQueueSendToBack(Queue_Console, &current, portMAX_DELAY);
         }
 
 
         /* ADD CODE
          * Update the prev_dir of the joystick
          */
-        prev_dir = dir;
+        joy_prev_dir = joy_dir;
+        acc_prev_dir = acc_dir;
     }
 }
 

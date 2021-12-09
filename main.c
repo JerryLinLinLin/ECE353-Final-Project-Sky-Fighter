@@ -49,7 +49,7 @@ int main(void)
     printf("*********************************************\n\r");
     printf("\n\r");
 
-    Queue_Console = xQueueCreate(10,sizeof(uint32_t));
+    Queue_Console = xQueueCreate(10,sizeof(ADC_joy_acc_dir));
 
     xTaskCreate
     (   Task_Console,
