@@ -12,6 +12,7 @@
 #include "msp432p401r.h"
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 /* RTOS header files */
 #include <FreeRTOS.h>
@@ -24,6 +25,7 @@
 #include <task_console.h>
 #include <task_renderer.h>
 #include <task_game_host.h>
+#include <image.h>
 
 
 

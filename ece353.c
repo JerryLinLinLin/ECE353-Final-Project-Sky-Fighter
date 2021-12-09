@@ -259,64 +259,6 @@ bool ece353_s2_pressed(void)
     }
 }
 
-/*****************************************************
- * Busy waits for 100mS and then returns.
- *
- * Timer32_1 MUST be configured as a 16-bit timer.
- * Assume that the MCU clock runs at 3MHz.  You will
- * need to use a pre-scalar in order to achieve a delay
- * of 100mS.
- *
- * Parameters:
- *      None
- * Returns
- *      None
- *****************************************************/
-void ece353_T32_1_wait_100mS(void)
-{
-    TIMER32_1->CONTROL = 0;
-
-    TIMER32_1->CONTROL = TIMER32_CONTROL_ONESHOT;
-    TIMER32_1->CONTROL &= ~TIMER32_CONTROL_SIZE;
-
-    TIMER32_1->CONTROL |= TIMER32_CONTROL_PRESCALE_1;
-
-    TIMER32_1->LOAD = 18750;
-
-    TIMER32_1->CONTROL |= TIMER32_CONTROL_ENABLE;
-
-    while(TIMER32_1->VALUE !=0);
-}
-
-/*****************************************************
- * Debounces Button1 using Timer32_1.
- * This function does not return until Button 1 has
- * been pressed for a minimum of 5 seconds.
- *
- * Waiting 5 Seconds will require you to call
- * ece353_T32_1_wait_100mS multiple times.
- *
- * Parameters
- *      None
- * Returns
- *      None
- *****************************************************/
-void ece353_button1_wait_for_press(void)
-{
-    int i=0;
-    while (true) {
-        while(ece353_button1()) {
-            ece353_T32_1_wait_100mS();
-            i++;
-            if (i > 50) {
-                return;
-            }
-
-        }
-        i=0;
-    }
-}
-
 /******************************************************************************
  * Initialize adc joystick and adc accelerometer
  ******************************************************************************/
@@ -384,24 +326,6 @@ void ece353_ADC14_PS2_XY_ACCELER_INI(void)
 
 }
 
-void ece353_T32_1_Interrupt_Ms(uint16_t ms)
-{
-    uint32_t ticks = ((SystemCoreClock * ms)/1000) -1;
-
-    TIMER32_1->CONTROL = 0;
-    TIMER32_1->LOAD = ticks;
-
-    __enable_irq();
-    NVIC_EnableIRQ(T32_INT1_IRQn);
-    NVIC_SetPriority(T32_INT1_IRQn,0);
-
-    TIMER32_1->CONTROL = TIMER32_CONTROL_ENABLE |
-                         TIMER32_CONTROL_MODE |
-                         TIMER32_CONTROL_SIZE |
-                         TIMER32_CONTROL_IE;
-
-}
-
 // setup all
 void ece353_all_setup(void) {
     ece353_button1_init();
@@ -410,5 +334,7 @@ void ece353_all_setup(void) {
     ece353_rgb_init();
     ece353_MKII_RGB_IO_Init(false);
     ece353_ADC14_PS2_XY_ACCELER_INI();
+
     serial_debug_init();
+    lcd_init();
 }

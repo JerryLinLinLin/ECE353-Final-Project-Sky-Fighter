@@ -50,6 +50,7 @@ int main(void)
     printf("\n\r");
 
     Queue_Console = xQueueCreate(10,sizeof(ADC_joy_acc_dir));
+    Queue_Game_Host = xQueueCreate(10,sizeof(ADC_joy_acc_dir));
 
     xTaskCreate
     (   Task_Console,
@@ -61,11 +62,20 @@ int main(void)
     );
 
     xTaskCreate
+    (   Task_Game_Host,
+        "Task_Game_Host",
+        configMINIMAL_STACK_SIZE,
+        NULL,
+        2,
+        &Task_Game_Host_Handle
+    );
+
+    xTaskCreate
     (   Task_ADC_Joy_Acc_Timer,
         "Task_ADC_Joy_Acc_Timer",
         configMINIMAL_STACK_SIZE,
         NULL,
-        2,
+        3,
         &Task_ADC_Joy_Acc_Timer_Handle
     );
 
@@ -74,7 +84,7 @@ int main(void)
         "Task_ADC_Joy_Acc_Bottom_Half",
         configMINIMAL_STACK_SIZE,
         NULL,
-        3,
+        4,
         &Task_ADC_Joy_Acc_Bottom_Half_Handle
     );
 

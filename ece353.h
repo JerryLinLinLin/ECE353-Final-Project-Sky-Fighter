@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include "msp.h"
 #include "serial_debug.h"
+#include "lcd.h"
 
 // include IO setup for each device
 // comments are only in source file c for tidiness
@@ -32,11 +33,6 @@ void ece353_MKII_RGB_IO_Init(bool en_primary_function);
 void ece353_MKII_RGB_LED(bool red, bool green, bool blue);
 
 void ece353_ADC14_PS2_XY_ACCELER_INI(void);
-
-// backup func
-void ece353_T32_1_wait_100mS(void);
-void ece353_button1_wait_for_press(void);
-void ece353_T32_1_Interrupt_Ms(uint16_t ms);
 
 
 #endif

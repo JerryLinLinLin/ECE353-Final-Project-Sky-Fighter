@@ -89,6 +89,13 @@
 
 #define HAL_LCD_delay(x)      __delay_cycles(x * 48)
 
+typedef enum {
+    MOVE_DIR_LEFT,
+    MOVE_DIR_RIGHT,
+    MOVE_DIR_UP,
+    MOVE_DIR_DOWN,
+} MOVE_DIR;
+
 extern void lcd_init(void);
 void HAL_LCD_PortInit(void);
 void HAL_LCD_SpiInit(void);
@@ -127,6 +134,17 @@ void lcd_draw_image(
   uint16_t fColor,
   uint16_t bColor
 );
+
+void lcd_draw_animation(
+        uint16_t x_start,
+        uint16_t y_start,
+        uint16_t image_width_pixels,
+        uint16_t image_height_pixels,
+        const uint8_t *image,
+        uint16_t fColor,
+        uint16_t bColor,
+        uint16_t step,
+        MOVE_DIR move_dir);
 
 /*******************************************************************************
 * Function Name: lcd_draw_line

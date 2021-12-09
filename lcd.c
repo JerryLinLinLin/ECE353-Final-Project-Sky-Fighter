@@ -345,6 +345,98 @@ void lcd_draw_image(
   }
 }
 
+/**
+ * Draw the animation. Set previous frame to bcolor and draw image at new coord
+ */
+void lcd_draw_animation(
+        uint16_t x_start,
+        uint16_t y_start,
+        uint16_t image_width_pixels,
+        uint16_t image_height_pixels,
+        const uint8_t *image,
+        uint16_t fColor,
+        uint16_t bColor,
+        uint16_t step,
+        MOVE_DIR move_dir
+        )
+{
+      uint16_t i, j;
+
+      uint16_t x0;
+      uint16_t x1;
+      uint16_t y0;
+      uint16_t y1;
+
+      x0 = x_start - (image_width_pixels/2);
+      x1 = x_start + (image_width_pixels/2);
+      if( (image_width_pixels & 0x01) == 0x00)
+      {
+          x1--;
+      }
+
+      y0 = y_start  - (image_height_pixels/2);
+      y1 = y_start  + (image_height_pixels/2) ;
+      if( (image_height_pixels & 0x01) == 0x00)
+      {
+          y1--;
+      }
+
+      if (move_dir == MOVE_DIR_LEFT) {
+          Crystalfontz128x128_SetDrawFrame(x1, y0, x1 + step, y1);
+          HAL_LCD_writeCommand(CM_RAMWR);
+          for (i = 0; i < step; i++) {
+              for (j = 0; j < image_height_pixels + 10; j++) {
+                  HAL_LCD_writeData(bColor >> 8);
+                  HAL_LCD_writeData(bColor);
+              }
+          }
+      }
+      else if (move_dir == MOVE_DIR_RIGHT) {
+          Crystalfontz128x128_SetDrawFrame(x0 - step, y0, x0, y1);
+          HAL_LCD_writeCommand(CM_RAMWR);
+          for (i = 0; i < step; i++) {
+              for (j = 0; j < image_height_pixels + 10; j++) {
+                  HAL_LCD_writeData(bColor >> 8);
+                  HAL_LCD_writeData(bColor);
+              }
+          }
+      }
+      else if (move_dir == MOVE_DIR_UP) {
+          Crystalfontz128x128_SetDrawFrame(x0, y1, x1, y1 + step);
+          HAL_LCD_writeCommand(CM_RAMWR);
+          for (i = 0; i < step; i++) {
+              for (j = 0; j < image_width_pixels + 10; j++) {
+                  HAL_LCD_writeData(bColor >> 8);
+                  HAL_LCD_writeData(bColor);
+              }
+          }
+      }
+      else {
+          Crystalfontz128x128_SetDrawFrame(x0, y0 - step, x1, y0);
+          HAL_LCD_writeCommand(CM_RAMWR);
+          for (i = 0; i < step; i++) {
+              for (j = 0; j < image_width_pixels + 10; j++) {
+                  HAL_LCD_writeData(bColor >> 8);
+                  HAL_LCD_writeData(bColor);
+              }
+          }
+      }
+
+//      Crystalfontz128x128_SetDrawFrame(x0, y0, x1, y1);
+
+
+      lcd_draw_image(
+        x_start,
+        y_start,
+        image_width_pixels,
+        image_height_pixels,
+        image,
+        fColor,
+        bColor
+      );
+
+}
+
 /*******************************************************************************
 * Function Name: lcd_draw_line
 ********************************************************************************
