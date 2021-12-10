@@ -27,6 +27,7 @@ typedef struct
 void Task_Game_Host(void *pvParameters);
 
 LOCATION boarder_range_validate(LOCATION loc);
+bool is_in_boarder(LOCATION loc);
 
 
 

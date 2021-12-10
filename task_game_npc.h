@@ -18,6 +18,8 @@ extern TaskHandle_t Task_Game_NPC_Handle;
 ******************************************************************************/
 void Task_Game_NPC(void *pvParameters);
 
+ADC_MOVE generate_random_dir(void);
+
 
 
 

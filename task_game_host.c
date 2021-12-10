@@ -30,8 +30,8 @@ void Task_Game_Host(void *pvParameters)
     lcd_draw_image(
             jet_loc.x,
             jet_loc.y,
-      jet_fighterWidthPixels,
-      jet_fighterHeightPixels,
+            jet_loc.width,
+            jet_loc.height,
       jet_fighterBitmaps,
       FG_COLOR,
       BG_COLOR
@@ -144,6 +144,23 @@ void Task_Game_Host(void *pvParameters)
         vTaskDelay(pdMS_TO_TICKS(5));
 
     }
+}
+
+bool is_in_boarder(LOCATION loc)
+{
+
+    int x0, x1, y0, y1;
+
+    x0 = loc.x - (loc.width/2);
+    x1 = loc.x + (loc.width/2);
+
+    y0 = loc.y  - (loc.height/2);
+    y1 = loc.y  + (loc.height/2);
+
+    if (x0 <= 2 || y0 <= 2 || x1 >= 126 || y1 >= 126) {
+        return true;
+    }
+    return false;
 }
 
 LOCATION boarder_range_validate(LOCATION loc) {

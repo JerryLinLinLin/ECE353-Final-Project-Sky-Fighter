@@ -65,11 +65,20 @@ int main(void)
     );
 
     xTaskCreate
+    (   Task_Game_NPC,
+        "Task_Game_NPC",
+        configMINIMAL_STACK_SIZE,
+        NULL,
+        2,
+        &Task_Game_NPC_Handle
+    );
+
+    xTaskCreate
     (   Task_Game_Host,
         "Task_Game_Host",
         configMINIMAL_STACK_SIZE,
         NULL,
-        2,
+        3,
         &Task_Game_Host_Handle
     );
 
@@ -78,7 +87,7 @@ int main(void)
         "Task_ADC_Joy_Acc_Timer",
         configMINIMAL_STACK_SIZE,
         NULL,
-        3,
+        4,
         &Task_ADC_Joy_Acc_Timer_Handle
     );
 
@@ -87,7 +96,7 @@ int main(void)
         "Task_ADC_Joy_Acc_Bottom_Half",
         configMINIMAL_STACK_SIZE,
         NULL,
-        4,
+        5,
         &Task_ADC_Joy_Acc_Bottom_Half_Handle
     );
 
