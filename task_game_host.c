@@ -42,7 +42,7 @@ void Task_Game_Host(void *pvParameters)
     while(1)
     {
 
-        xQueueReceive(Queue_Game_Host, &current, 1);
+        xQueueReceive(Queue_Game_Host, &current, 0);
 
 //        if (current.joy.left && current.joy.up)
 //        {
