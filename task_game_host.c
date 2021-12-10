@@ -44,21 +44,86 @@ void Task_Game_Host(void *pvParameters)
 
         xQueueReceive(Queue_Game_Host, &current, 1);
 
+//        if (current.joy.left && current.joy.up)
+//        {
+//            jet_loc.x--;
+//            jet_loc.y--;
+//            vTaskDelay(pdMS_TO_TICKS(10));
+//        }
+//        if (current.joy.right && current.joy.up)
+//        {
+//            jet_loc.x++;
+//            jet_loc.y--;
+//            vTaskDelay(pdMS_TO_TICKS(10));
+//        }
+//        if (current.joy.left && current.joy.down)
+//        {
+//            jet_loc.x--;
+//            jet_loc.y++;
+//            vTaskDelay(pdMS_TO_TICKS(10));
+//        }
+//        if (current.joy.right && current.joy.down)
+//        {
+//            jet_loc.x++;
+//            jet_loc.y++;
+//            vTaskDelay(pdMS_TO_TICKS(10));
+//        }
+//
+//        if (current.joy.left)
+//        {
+//            jet_loc.x--;
+//        }
+//        if (current.joy.right)
+//        {
+//            jet_loc.x++;
+//        }
+//        if (current.joy.up)
+//        {
+//            jet_loc.y--;
+//        }
+//        if (current.joy.down)
+//        {
+//            jet_loc.y++;
+//        }
 
-        if (current.acc == ACC_DIR_LEFT)
+        if (current.acc.left && current.acc.up)
+        {
+            jet_loc.x--;
+            jet_loc.y--;
+            vTaskDelay(pdMS_TO_TICKS(10));
+        }
+        if (current.acc.right && current.acc.up)
+        {
+            jet_loc.x++;
+            jet_loc.y--;
+            vTaskDelay(pdMS_TO_TICKS(10));
+        }
+        if (current.acc.left && current.acc.down)
+        {
+            jet_loc.x--;
+            jet_loc.y++;
+            vTaskDelay(pdMS_TO_TICKS(10));
+        }
+        if (current.acc.right && current.acc.down)
+        {
+            jet_loc.x++;
+            jet_loc.y++;
+            vTaskDelay(pdMS_TO_TICKS(10));
+        }
+
+        if (current.acc.left)
         {
             jet_loc.x--;
         }
-        if (current.acc == ACC_DIR_RIGHT)
+        if (current.acc.right)
         {
             jet_loc.x++;
         }
-        if (current.acc == ACC_DIR_UP)
+        if (current.acc.up)
         {
-
             jet_loc.y--;
         }
-        if (current.acc == ACC_DIR_DOWN)
+        if (current.acc.down)
         {
             jet_loc.y++;
         }

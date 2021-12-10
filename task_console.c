@@ -24,37 +24,37 @@ void Task_Console(void *pvParameters)
         xQueueReceive(Queue_Console, &current, portMAX_DELAY);
 
         if (current.joy_is_changed == true) {
-            if (current.joy == JOYSTICK_DIR_CENTER) {
+            if (current.joy.center) {
                         printf("DEBUG: Joystick position - CENTER\n\r");
                     }
-                    if (current.joy == JOYSTICK_DIR_LEFT) {
+                    if (current.joy.left) {
                         printf("DEBUG: Joystick position - LEFT\n\r");
                     }
-                    if (current.joy == JOYSTICK_DIR_RIGHT) {
+                    if (current.joy.right) {
                         printf("DEBUG: Joystick position - RIGHT\n\r");
                     }
-                    if (current.joy == JOYSTICK_DIR_UP) {
+                    if (current.joy.up) {
                         printf("DEBUG: Joystick position - UP\n\r");
                     }
-                    if (current.joy == JOYSTICK_DIR_DOWN) {
+                    if (current.joy.down) {
                         printf("DEBUG: Joystick position - DOWN\n\r");
                     }
         }
 
         if (current.acc_is_changed == true) {
-            if (current.acc == ACC_DIR_CENTER) {
+            if (current.acc.center) {
                         printf("DEBUG: Accelerometer position - CENTER\n\r");
                     }
-                    if (current.acc == ACC_DIR_LEFT) {
+                    if (current.acc.left) {
                         printf("DEBUG: Accelerometer position - LEFT\n\r");
                     }
-                    if (current.acc == ACC_DIR_RIGHT) {
+                    if (current.acc.right) {
                         printf("DEBUG: Accelerometer position - RIGHT\n\r");
                     }
-                    if (current.acc == ACC_DIR_UP) {
+                    if (current.acc.up) {
                         printf("DEBUG: Accelerometer position - UP\n\r");
                     }
-                    if (current.acc == ACC_DIR_DOWN) {
+                    if (current.acc.down) {
                         printf("DEBUG: Accelerometer position - DOWN\n\r");
                     }
         }

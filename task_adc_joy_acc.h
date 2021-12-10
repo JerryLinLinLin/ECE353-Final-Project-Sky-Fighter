@@ -22,26 +22,21 @@
 extern TaskHandle_t Task_ADC_Joy_Acc_Timer_Handle;
 extern TaskHandle_t Task_ADC_Joy_Acc_Bottom_Half_Handle;
 
-typedef enum {
-    JOYSTICK_DIR_CENTER,
-    JOYSTICK_DIR_LEFT,
-    JOYSTICK_DIR_RIGHT,
-    JOYSTICK_DIR_UP,
-    JOYSTICK_DIR_DOWN,
-} JOYSTICK_DIR_t;
 
-typedef enum {
-    ACC_DIR_CENTER,
-    ACC_DIR_LEFT,
-    ACC_DIR_RIGHT,
-    ACC_DIR_UP,
-    ACC_DIR_DOWN,
-} ACC_DIR_t;
 
 typedef struct
 {
-    JOYSTICK_DIR_t joy;
-    ACC_DIR_t acc;
+    bool center;
+    bool left;
+    bool right;
+    bool up;
+    bool down;
+} ADC_MOVE;
+
+typedef struct
+{
+    ADC_MOVE joy;
+    ADC_MOVE acc;
     bool joy_is_changed;
     bool acc_is_changed;
 } ADC_joy_acc_dir;
@@ -58,6 +53,8 @@ void Task_ADC_Joy_Acc_Timer(void *pvParameters);
 void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters);
 
 void ADC14_IRQHandler(void);
+
+bool ADC_MOVE_compare(ADC_MOVE *m1, ADC_MOVE *m2);
 
 
 #endif /* TASK_ADC_JOY_ACC_H_ */
