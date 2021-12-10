@@ -32,6 +32,7 @@ void am_light_init(void);
 
 /******************************************************************************
  * Returns the lux value after conversion from ambient light sensor
+ * Note: In Auto Mode, exp is 0, lux_value < 10 is dark, max 40.95
  ******************************************************************************/
 float am_light_get_lux(void);
 

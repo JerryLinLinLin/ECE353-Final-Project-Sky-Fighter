@@ -337,4 +337,8 @@ void ece353_all_setup(void) {
 
     serial_debug_init();
     lcd_init();
+
+    i2c_init();
+    am_light_init();
+
 }
