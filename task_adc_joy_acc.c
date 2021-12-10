@@ -85,11 +85,11 @@ void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
         }
 
         // accelerometer
-        if((ACC_X_DIR > (VOLT_2P31 - (ACC_RANGE * 3))) &&  (ACC_X_DIR < (VOLT_2P31 + (ACC_RANGE * 3))))
+        if((ACC_X_DIR > (VOLT_2P31 - (ACC_RANGE * 4))) &&  (ACC_X_DIR < (VOLT_2P31 + (ACC_RANGE * 4))))
         {
            acc_dir = ACC_DIR_RIGHT;
         }
-        else if((ACC_X_DIR > (VOLT_0P99 - (ACC_RANGE * 3))) &&  (ACC_X_DIR < (VOLT_0P99 + (ACC_RANGE * 3))))
+        else if((ACC_X_DIR > (VOLT_0P99 - (ACC_RANGE * 4))) &&  (ACC_X_DIR < (VOLT_0P99 + (ACC_RANGE * 4))))
         {
             acc_dir = ACC_DIR_LEFT;
         }
@@ -97,7 +97,7 @@ void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
         {
             acc_dir = ACC_DIR_UP;
         }
-        else if((ACC_Z_DIR > (VOLT_0P99 - ACC_RANGE * 6)) &&  (ACC_Z_DIR < (VOLT_0P99 + ACC_RANGE * 6)))
+        else if((ACC_Z_DIR > (VOLT_0P99 - ACC_RANGE * 8)) &&  (ACC_Z_DIR < (VOLT_0P99 + ACC_RANGE * 8)))
         {
             acc_dir = ACC_DIR_DOWN;
         }

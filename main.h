@@ -23,9 +23,9 @@
 #include <ece353.h>
 #include <task_adc_joy_acc.h>
 #include <task_console.h>
-#include <task_renderer.h>
 #include <task_game_host.h>
 #include <image.h>
+#include <task_game_npc.h>
 
 SemaphoreHandle_t Sem_RENDER;
 
