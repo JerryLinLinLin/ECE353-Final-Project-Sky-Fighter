@@ -18,5 +18,23 @@ extern const uint8_t ufo1Bitmaps[];
 extern const uint8_t ufo1WidthPixels;
 extern const uint8_t ufo1HeightPixels;
 
+typedef enum {
+    RED1 = 0,
+    RED2,
+    YELLOW1,
+    YELLOW2,
+    ORANGE1,
+    ORANGE2,
+    PURPLE1,
+    PURPLE2,
+    BLUE1,
+    BLUE2,
+    GREEN1,
+    GREEN2,
+    WHITE,
+    BLACK
+} COLOR_INDEX;
+
+extern const uint16_t COLOR_CODE[14];
 
 #endif /* IMAGE_H_ */

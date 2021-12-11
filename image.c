@@ -88,6 +88,8 @@ const uint8_t ufo1Bitmaps[] =
 const uint8_t ufo1WidthPixels = 33;
 const uint8_t ufo1HeightPixels = 26;
 
-
+const uint16_t COLOR_CODE[14] = { 0xf800, 0xc0a5, 0xfe23, 0xffe3, 0xfb85,
+                                  0xe3c5, 0xe3dd, 0xabdd, 0x43dd, 0x459d,
+                                  0x46c8, 0x6ecf, 0xffff, 0x0000 };
 
 

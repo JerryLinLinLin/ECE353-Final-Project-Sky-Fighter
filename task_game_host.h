@@ -10,9 +10,6 @@
 
 #include <main.h>
 
-extern QueueHandle_t Queue_Game_Host;
-extern TaskHandle_t Task_Game_Host_Handle;
-
 typedef struct
 {
     int x;

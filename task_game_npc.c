@@ -6,10 +6,6 @@
  */
 #include <main.h>
 
-//QueueHandle_t Queue_Game_NPC;
-TaskHandle_t Task_Game_NPC1_Handle;
-TaskHandle_t Task_Game_NPC2_Handle;
-
 #define RED_5   0x1F
 #define GREEN_6 0x0F
 #define BLUE_5  0x0F

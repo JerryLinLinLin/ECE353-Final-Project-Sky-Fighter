@@ -8,17 +8,12 @@
 #include <main.h>
 
 
- TaskHandle_t Task_ADC_Joy_Acc_Bottom_Half_Handle;
- TaskHandle_t Task_ADC_Joy_Acc_Timer_Handle;
-
  volatile uint32_t JOYSTICK_X_DIR = 0;
  volatile uint32_t JOYSTICK_Y_DIR = 0;
 
  volatile uint32_t ACC_X_DIR = 0;
  volatile uint32_t ACC_Y_DIR = 0;
  volatile uint32_t ACC_Z_DIR = 0;
-
-
 
 
  /******************************************************************************

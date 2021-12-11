@@ -6,8 +6,6 @@
  */
 #include <main.h>
 
-QueueHandle_t Queue_Console;
-TaskHandle_t Task_Console_Handle;
 
 /******************************************************************************
 * Task used to print out messages to the console

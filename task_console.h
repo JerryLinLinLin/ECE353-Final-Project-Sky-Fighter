@@ -10,9 +10,6 @@
 
 #include <main.h>
 
-extern QueueHandle_t Queue_Console;
-extern TaskHandle_t Task_Console_Handle;
-
 /******************************************************************************
 * Task used to print out messages to the console
 ******************************************************************************/

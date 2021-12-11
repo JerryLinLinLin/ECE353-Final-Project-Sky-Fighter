@@ -10,9 +10,6 @@
 
 #include <main.h>
 
-//extern QueueHandle_t Queue_Game_NPC;
-extern TaskHandle_t Task_Game_NPC1_Handle;
-extern TaskHandle_t Task_Game_NPC2_Handle;
 
 /******************************************************************************
 * Task used to print out messages to the console

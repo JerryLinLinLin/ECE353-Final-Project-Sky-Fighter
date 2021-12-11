@@ -19,10 +19,6 @@
 #define VOLT_1P65 ((int)(1.65/(3.3/4096))) // 2048      // 1.65 /(3.3/4096)
 #define ACC_RANGE 100       // Error range of accelerometer
 
-extern TaskHandle_t Task_ADC_Joy_Acc_Timer_Handle;
-extern TaskHandle_t Task_ADC_Joy_Acc_Bottom_Half_Handle;
-
-
 
 typedef struct
 {

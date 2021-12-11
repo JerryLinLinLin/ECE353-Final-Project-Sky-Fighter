@@ -6,18 +6,8 @@
  */
 #include <main.h>
 
-QueueHandle_t Queue_Game_Host;
-TaskHandle_t Task_Game_Host_Handle;
-
-#define RED_5   0x1F
-#define GREEN_6 0x0F
-#define BLUE_5  0x0F
-#define BLACK 0x0000
-
-#define FG_COLOR (RED_5 << 11)
+#define FG_COLOR (RED_5)
 #define BG_COLOR BLACK
-
-
 
 /******************************************************************************
 * Task used to print out messages to the console
@@ -27,14 +17,17 @@ void Task_Game_Host(void *pvParameters)
     LOCATION jet_loc = {.x = 64, .y = 64, .height = jet_fighterHeightPixels,
                         .width = jet_fighterWidthPixels};
 
+    uint16_t fgColor = COLOR_CODE[RED1];
+    uint16_t bgColor = COLOR_CODE[BLACK];
+
     lcd_draw_image(
             jet_loc.x,
             jet_loc.y,
             jet_loc.width,
             jet_loc.height,
       jet_fighterBitmaps,
-      FG_COLOR,
-      BG_COLOR
+      fgColor,
+      bgColor
     );
 
     ADC_joy_acc_dir current;
@@ -137,8 +130,8 @@ void Task_Game_Host(void *pvParameters)
           jet_loc.width,
           jet_loc.height,
           jet_fighterBitmaps,
-          FG_COLOR,
-          BG_COLOR
+          fgColor,
+          bgColor
         );
         xSemaphoreGive(Sem_RENDER);
         vTaskDelay(pdMS_TO_TICKS(5));
