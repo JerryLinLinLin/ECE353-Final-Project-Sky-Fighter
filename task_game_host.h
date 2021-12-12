@@ -35,5 +35,7 @@ bool is_in_boarder(LOCATION loc);
 
 bool is_collided(LOCATION loc1, LOCATION loc2);
 
+int generate_random_in_range(int lower, int upper);
+
 
 #endif /* TASK_CONSOLE_H_ */
