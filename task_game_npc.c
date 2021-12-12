@@ -83,10 +83,10 @@ void Task_Game_NPC(void *pvParameters)
         }
 
         ufo1_loc = boarder_range_validate(ufo1_loc);
-        xQueueSendToBack(Queue_Game_NPC_to_Host, &ufo1_loc, 0);
+        xQueueSendToBack(Queue_Game_Collision, &ufo1_loc, 0);
 
         bool flash = 0;
-        xQueueReceive(Queue_Game_Host_to_NPC, &flash, 0);
+        xQueueReceive(Queue_Game_NPC, &flash, 0);
         if (flash) {
             xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
             lcd_draw_image(

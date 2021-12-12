@@ -327,15 +327,13 @@ void ece353_ADC14_PS2_XY_ACCELER_INI(void)
 }
 
 // setup all
-void ece353_all_setup(void) {8000
+void ece353_all_setup(void) {
     ece353_button1_init();
     ece353_button2_init();
     ece353_s1_s2_init();
     ece353_rgb_init();
     ece353_MKII_RGB_IO_Init(false);
     ece353_ADC14_PS2_XY_ACCELER_INI();
-
-    buzzer_init(10000);
 
     serial_debug_init();
     lcd_init();
