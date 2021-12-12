@@ -31,8 +31,12 @@ void Task_Game_Host(void *pvParameters)
     uint16_t fgColor = COLOR_CODE[GREEN1];
     uint16_t bgColor = COLOR_CODE[BLACK];
 
+    // collision
     bool current_collide = false; // collision flag
     bool pre_is_collide = false; // detect previous collision
+
+    // am light sensor change color
+    bool is_dark = false;
 
     // create bullet list for tracking
     int i;
@@ -128,6 +132,7 @@ void Task_Game_Host(void *pvParameters)
         );
         xSemaphoreGive(Sem_RENDER);
 
+        // bullet control
         int q;
         for (q = 0; q < 5; q++) {
             if (bullet_list[q].in_use) {
@@ -200,6 +205,7 @@ void Task_Game_Host(void *pvParameters)
             }
         }
 
+        // Initialize a bullet
         debounce_state = debounce_state << 1;
         if (ece353_s1_pressed())
         {
@@ -222,47 +228,17 @@ void Task_Game_Host(void *pvParameters)
             }
         }
 
-        //        if (current.joy.left && current.joy.up)
-        //        {
-        //            jet_loc.x--;
-        //            jet_loc.y--;
-        //            vTaskDelay(pdMS_TO_TICKS(10));
-        //        }
-        //        if (current.joy.right && current.joy.up)
-        //        {
-        //            jet_loc.x++;
-        //            jet_loc.y--;
-        //            vTaskDelay(pdMS_TO_TICKS(10));
-        //        }
-        //        if (current.joy.left && current.joy.down)
-        //        {
-        //            jet_loc.x--;
-        //            jet_loc.y++;
-        //            vTaskDelay(pdMS_TO_TICKS(10));
-        //        }
-        //        if (current.joy.right && current.joy.down)
-        //        {
-        //            jet_loc.x++;
-        //            jet_loc.y++;
-        //            vTaskDelay(pdMS_TO_TICKS(10));
-        //        }
-        //
-        //        if (current.joy.left)
-        //        {
-        //            jet_loc.x--;
-        //        }
-        //        if (current.joy.right)
-        //        {
-        //            jet_loc.x++;
-        //        }
-        //        if (current.joy.up)
-        //        {
-        //            jet_loc.y--;
-        //        }
-        //        if (current.joy.down)
-        //        {
-        //            jet_loc.y++;
-        //        }
+        // am light sensor change color
+        if (is_dark && (am_light_get_lux() > 10)) {
+            is_dark = false;
+            fgColor = COLOR_CODE[generate_random_in_range(0, 12)];
+        }
+        if (!is_dark && (am_light_get_lux() < 10)) {
+            is_dark = true;
+            fgColor = COLOR_CODE[generate_random_in_range(0, 12)];
+        }
+
+
 
         // delay task
         vTaskDelay(pdMS_TO_TICKS(5));
@@ -348,6 +324,13 @@ bool is_collided(LOCATION loc1, LOCATION loc2)
         return true;
     }
     return false;
+}
+
+int generate_random_in_range(int lower, int upper)
+{
+    int i;
+    int num = (rand() % (upper - lower + 1)) + lower;
+    return num;
 }
 
 
