@@ -45,26 +45,25 @@ int main(void)
 
     printf("\n\r");
     printf("*********************************************\n\r");
-    printf("ECE 353 Final Project \n\r");
+    printf("ECE 353 Final Project - Jet Fighter\n\r");
     printf("*********************************************\n\r");
     printf("\n\r");
 
-    Queue_Console = xQueueCreate(100,sizeof(ADC_joy_acc_dir));
-    Queue_Game_Host = xQueueCreate(100,sizeof(ADC_joy_acc_dir));
-    Queue_Game_Collision = xQueueCreate(100,sizeof(LOCATION));
-    Queue_Game_NPC = xQueueCreate(1,sizeof(bool));
+    Queue_Game_ADC_to_Host = xQueueCreate(100,sizeof(ADC_joy_acc_dir));
+    Queue_Game_NPC_to_Host = xQueueCreate(100,sizeof(LOCATION));
+    Queue_Game_Host_to_NPC = xQueueCreate(1,sizeof(bool));
 
     Sem_RENDER = xSemaphoreCreateBinary();
     xSemaphoreGive(Sem_RENDER);
 
-    xTaskCreate
-    (   Task_Console,
-        "Task_Console",
-        configMINIMAL_STACK_SIZE,
-        NULL,
-        1,
-        &Task_Console_Handle
-    );
+//    xTaskCreate
+//    (   Task_Console,
+//        "Task_Console",
+//        configMINIMAL_STACK_SIZE,
+//        NULL,
+//        1,
+//        &Task_Console_Handle
+//    );
 
 //    xTaskCreate
 //    (   Task_Game_Controller,

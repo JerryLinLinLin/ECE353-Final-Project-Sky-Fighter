@@ -42,9 +42,8 @@ TaskHandle_t Task_ADC_Joy_Acc_Timer_Handle;
 TaskHandle_t Task_Console_Handle;
 
 // define queue
-QueueHandle_t Queue_Game_Host;
-QueueHandle_t Queue_Game_NPC;
-QueueHandle_t Queue_Game_Collision;
-QueueHandle_t Queue_Console;
+QueueHandle_t Queue_Game_ADC_to_Host;
+QueueHandle_t Queue_Game_Host_to_NPC;
+QueueHandle_t Queue_Game_NPC_to_Host;
 
 #endif /* MAIN_H_ */

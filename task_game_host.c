@@ -68,7 +68,7 @@ void Task_Game_Host(void *pvParameters)
     while(1)
     {
 
-        xQueueReceive(Queue_Game_Host, &current, 0);
+        xQueueReceive(Queue_Game_ADC_to_Host, &current, 0);
 
         // Control jet movement
         if (current.acc.left && current.acc.up)
@@ -112,7 +112,7 @@ void Task_Game_Host(void *pvParameters)
         jet_loc = boarder_range_validate(jet_loc);
 
         // Collision detection
-        xQueueReceive(Queue_Game_Collision, &npc_loc, 0);
+        xQueueReceive(Queue_Game_NPC_to_Host, &npc_loc, 0);
         bool current_collide = is_collided(jet_loc, npc_loc);
         if (current_collide && !pre_is_collide) {
 //            printf("DEBUG: IS COLLIDED\n\r");
@@ -139,7 +139,7 @@ void Task_Game_Host(void *pvParameters)
                 // if it is in boarder or hit npc
                 if (is_collided(npc_loc, bullet_list[q].loc)) {
                     bool flash = 1;
-                    xQueueSendToBack(Queue_Game_NPC, &flash, 0);
+                    xQueueSendToBack(Queue_Game_Host_to_NPC, &flash, 0);
 
                 }
                 if (is_in_boarder(bullet_list[q].loc) || is_collided(npc_loc, bullet_list[q].loc)) {
@@ -227,7 +227,6 @@ void Task_Game_Host(void *pvParameters)
                 }
             }
         }
-//        buzzer_on();
         // am light sensor change color
         if (is_dark && (am_light_get_lux() > 10)) {
             is_dark = false;

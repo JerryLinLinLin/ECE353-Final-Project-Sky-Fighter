@@ -171,13 +171,8 @@ void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
         current.joy_is_changed = !ADC_MOVE_compare(&joy_dir, &joy_prev_dir);
         current.acc_is_changed = !ADC_MOVE_compare(&acc_dir, &acc_prev_dir);
 
-        // send
-        if (current.joy_is_changed || current.acc_is_changed) {
-            xQueueSendToBack(Queue_Console, &current, portMAX_DELAY);
-
-        }
-
-        xQueueSendToBack(Queue_Game_Host, &current, 0);
+        // send to Host
+        xQueueSendToBack(Queue_Game_ADC_to_Host, &current, 0);
 
         /* ADD CODE
          * Update the prev_dir of the joystick
