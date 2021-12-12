@@ -52,6 +52,7 @@ int main(void)
     Queue_Console = xQueueCreate(100,sizeof(ADC_joy_acc_dir));
     Queue_Game_Host = xQueueCreate(100,sizeof(ADC_joy_acc_dir));
     Queue_Game_Collision = xQueueCreate(100,sizeof(LOCATION));
+    Queue_Game_NPC = xQueueCreate(1,sizeof(bool));
 
     Sem_RENDER = xSemaphoreCreateBinary();
     xSemaphoreGive(Sem_RENDER);
@@ -65,20 +66,20 @@ int main(void)
         &Task_Console_Handle
     );
 
-    xTaskCreate
-    (   Task_Game_Controller,
-        "Task_Game_Controller",
-        configMINIMAL_STACK_SIZE,
-        NULL,
-        2,
-        &Task_Game_Controller_Handle
-    );
+//    xTaskCreate
+//    (   Task_Game_Controller,
+//        "Task_Game_Controller",
+//        configMINIMAL_STACK_SIZE,
+//        NULL,
+//        2,
+//        &Task_Game_Controller_Handle
+//    );
 
     xTaskCreate
     (   Task_Game_NPC,
         "Task_Game_NPC",
         configMINIMAL_STACK_SIZE,
-        1024,
+        NULL,
         3,
         &Task_Game_NPC_Handle
     );
@@ -95,7 +96,7 @@ int main(void)
     xTaskCreate
     (   Task_ADC_Joy_Acc_Timer,
         "Task_ADC_Joy_Acc_Timer",
-        1024,
+        configMINIMAL_STACK_SIZE,
         NULL,
         5,
         &Task_ADC_Joy_Acc_Timer_Handle

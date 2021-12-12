@@ -6,14 +6,6 @@
  */
 #include <main.h>
 
-#define RED_5   0x1F
-#define GREEN_6 0x0F
-#define BLUE_5  0x0F
-#define BLACK 0x0000
-
-#define FG_COLOR (RED_5 << 11)
-#define BG_COLOR BLACK
-
 /******************************************************************************
 * Task used to print out messages to the console
 ******************************************************************************/
@@ -27,14 +19,18 @@ void Task_Game_NPC(void *pvParameters)
 
     unsigned long long move_time_count = 0;
 
+    // jet color
+    uint16_t fgColor = COLOR_CODE[RED1];
+    uint16_t bgColor = COLOR_CODE[BLACK];
+
     lcd_draw_image(
             ufo1_loc.x,
             ufo1_loc.y,
             ufo1_loc.width,
             ufo1_loc.height,
             ufo1Bitmaps,
-      FG_COLOR,
-      BG_COLOR
+            fgColor,
+            bgColor
     );
 
     while(1)
@@ -87,19 +83,36 @@ void Task_Game_NPC(void *pvParameters)
         }
 
         ufo1_loc = boarder_range_validate(ufo1_loc);
-        xQueueSendToBack(Queue_Game_Collision, &ufo1_loc, 50);
+        xQueueSendToBack(Queue_Game_Collision, &ufo1_loc, 0);
 
-        xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
-        lcd_draw_image(
-                ufo1_loc.x,
-                ufo1_loc.y,
-                ufo1_loc.width,
-                ufo1_loc.height,
-                ufo1Bitmaps,
-          FG_COLOR,
-          BG_COLOR
-        );
-        xSemaphoreGive(Sem_RENDER);
+        bool flash = 0;
+        xQueueReceive(Queue_Game_NPC, &flash, 0);
+        if (flash) {
+            xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
+            lcd_draw_image(
+                    ufo1_loc.x,
+                    ufo1_loc.y,
+                    ufo1_loc.width,
+                    ufo1_loc.height,
+                    ufo1Bitmaps,
+                    COLOR_CODE[WHITE],
+                    bgColor
+            );
+            xSemaphoreGive(Sem_RENDER);
+        }
+        else {
+            xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
+            lcd_draw_image(
+                    ufo1_loc.x,
+                    ufo1_loc.y,
+                    ufo1_loc.width,
+                    ufo1_loc.height,
+                    ufo1Bitmaps,
+                    fgColor,
+                    bgColor
+            );
+            xSemaphoreGive(Sem_RENDER);
+        }
         vTaskDelay(pdMS_TO_TICKS(50));
 
     }

@@ -36,8 +36,8 @@ void Task_Game_Host(void *pvParameters)
 
     // create bullet list for tracking
     int i;
-    BULLET bullet_list[10];
-    for (i = 0; i < 10; i++) {
+    BULLET bullet_list[5];
+    for (i = 0; i < 5; i++) {
         LOCATION new_bullet_loc = { .x = 0, .y = 0, .height = bulletWidthPixels,
                                     .width = bulletHeightPixels };
         ADC_MOVE new_bullet_dir = { .center = false, .left = false, .right = false,
@@ -71,43 +71,39 @@ void Task_Game_Host(void *pvParameters)
         {
             jet_loc.x--;
             jet_loc.y--;
-            vTaskDelay(pdMS_TO_TICKS(10));
         }
-        if (current.acc.right && current.acc.up)
+        else if (current.acc.right && current.acc.up)
         {
             jet_loc.x++;
             jet_loc.y--;
-            vTaskDelay(pdMS_TO_TICKS(10));
         }
-        if (current.acc.left && current.acc.down)
+        else if (current.acc.left && current.acc.down)
         {
             jet_loc.x--;
             jet_loc.y++;
-            vTaskDelay(pdMS_TO_TICKS(10));
         }
-        if (current.acc.right && current.acc.down)
+        else if (current.acc.right && current.acc.down)
         {
             jet_loc.x++;
             jet_loc.y++;
-            vTaskDelay(pdMS_TO_TICKS(10));
         }
-        if (current.acc.left)
+        else if (current.acc.left)
         {
             jet_loc.x--;
         }
-        if (current.acc.right)
+        else if (current.acc.right)
         {
             jet_loc.x++;
         }
-        if (current.acc.up)
+        else if (current.acc.up)
         {
             jet_loc.y--;
         }
-        if (current.acc.down)
+        else if (current.acc.down)
         {
             jet_loc.y++;
         }
-//        else {}
+        else {}
 
         jet_loc = boarder_range_validate(jet_loc);
 
@@ -115,7 +111,7 @@ void Task_Game_Host(void *pvParameters)
         xQueueReceive(Queue_Game_Collision, &npc_loc, 0);
         bool current_collide = is_collided(jet_loc, npc_loc);
         if (current_collide && !pre_is_collide) {
-            printf("DEBUG: IS COLLIDED\n\r");
+//            printf("DEBUG: IS COLLIDED\n\r");
         }
         pre_is_collide = current_collide;
 
@@ -133,11 +129,16 @@ void Task_Game_Host(void *pvParameters)
         xSemaphoreGive(Sem_RENDER);
 
         int q;
-        for (q = 0; q < 10; q++) {
+        for (q = 0; q < 5; q++) {
             if (bullet_list[q].in_use) {
                 // if it is in boarder or hit npc
+                if (is_collided(npc_loc, bullet_list[q].loc)) {
+                    bool flash = 1;
+                    xQueueSendToBack(Queue_Game_NPC, &flash, 0);
+
+                }
                 if (is_in_boarder(bullet_list[q].loc) || is_collided(npc_loc, bullet_list[q].loc)) {
-                    // render bullet
+                    // render bullet with empty
                     xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
                                     lcd_draw_image(
                                       bullet_list[q].loc.x,
@@ -207,7 +208,7 @@ void Task_Game_Host(void *pvParameters)
         if (debounce_state == 0x7F)
         {
             bool bypass = false;
-            for (q = 0; q < 10; q++) {
+            for (q = 0; q < 5; q++) {
                 if (bypass) {
                     continue;
                 }

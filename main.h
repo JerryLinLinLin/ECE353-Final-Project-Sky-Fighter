@@ -42,6 +42,7 @@ TaskHandle_t Task_Console_Handle;
 
 // define queue
 QueueHandle_t Queue_Game_Host;
+QueueHandle_t Queue_Game_NPC;
 QueueHandle_t Queue_Game_Collision;
 QueueHandle_t Queue_Console;
 

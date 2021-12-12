@@ -70,6 +70,7 @@ void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
         /* ADD CODE
          * Wait until we get a task notification from the ADC14 ISR
          */
+        int j = 1;
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
         // joystick
@@ -178,14 +179,13 @@ void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
 
         xQueueSendToBack(Queue_Game_Host, &current, 0);
 
-
-
-
         /* ADD CODE
          * Update the prev_dir of the joystick
          */
         joy_prev_dir = joy_dir;
         acc_prev_dir = acc_dir;
+
+//        vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
 
@@ -210,7 +210,7 @@ void ADC14_IRQHandler(void)
      */
     vTaskNotifyGiveFromISR(Task_ADC_Joy_Acc_Bottom_Half_Handle, &xHigherPriorityTaskWoken);
     portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-
+//    vTaskDelay(pdMS_TO_TICKS(50));
 }
 
 bool ADC_MOVE_compare(ADC_MOVE *m1, ADC_MOVE *m2)
