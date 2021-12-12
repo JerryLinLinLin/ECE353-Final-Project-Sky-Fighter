@@ -30,55 +30,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- *  ======== main_freertos.c ========
- */
-#include "msp.h"
-#include "msp432p401r.h"
-#include <stdint.h>
-#include <stdio.h>
-
-/* RTOS header files */
-#include <FreeRTOS.h>
-#include <task.h>
-
-TaskHandle_t Task_Blink_LED1_Handle = NULL;
-
-/* ****************************************************************************
- * This Function initializes the hardware required to blink LED1 on the
- * MSP432 Launchpad
- * ***************************************************************************/
-void blink_led1_hw_init(void)
-{
-    // set direction as an output
-    P1->DIR |= BIT0;
-
-    // Turn off LED
-    P1->OUT &= ~BIT0;
-}
-
-/******************************************************************************
-* Tasked used to blink LED1 on MSP432 Launchpad
-******************************************************************************/
-void Task_Blink_LED1(void *pvParameters)
-{
-    int i;
-    while(1)
-    {
-        // turn on the LED
-        P1->OUT |= BIT0;
-
-        // Delay
-        for(i=0; i < 1000000; i++){};
-
-        // turn off the LED
-        P1->OUT &= ~BIT0;
-
-        // Delay
-        for(i=0; i < 1000000; i++){};
-    }
-}
-
+#include "main.h"
 
 /*
  *  ======== main ========
@@ -87,15 +39,76 @@ int main(void)
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
 
-    blink_led1_hw_init();
+    ece353_all_setup();
+
+    __enable_irq();
+
+    printf("\n\r");
+    printf("*********************************************\n\r");
+    printf("ECE 353 Final Project \n\r");
+    printf("*********************************************\n\r");
+    printf("\n\r");
+
+    Queue_Console = xQueueCreate(100,sizeof(ADC_joy_acc_dir));
+    Queue_Game_Host = xQueueCreate(100,sizeof(ADC_joy_acc_dir));
+    Queue_Game_Collision = xQueueCreate(100,sizeof(LOCATION));
+    Queue_Game_NPC = xQueueCreate(1,sizeof(bool));
+
+    Sem_RENDER = xSemaphoreCreateBinary();
+    xSemaphoreGive(Sem_RENDER);
 
     xTaskCreate
-    (   Task_Blink_LED1,
-        "LED1 Blink Task",
+    (   Task_Console,
+        "Task_Console",
         configMINIMAL_STACK_SIZE,
         NULL,
         1,
-        &Task_Blink_LED1_Handle
+        &Task_Console_Handle
+    );
+
+//    xTaskCreate
+//    (   Task_Game_Controller,
+//        "Task_Game_Controller",
+//        configMINIMAL_STACK_SIZE,
+//        NULL,
+//        2,
+//        &Task_Game_Controller_Handle
+//    );
+
+    xTaskCreate
+    (   Task_Game_NPC,
+        "Task_Game_NPC",
+        configMINIMAL_STACK_SIZE,
+        NULL,
+        3,
+        &Task_Game_NPC_Handle
+    );
+
+    xTaskCreate
+    (   Task_Game_Host,
+        "Task_Game_Host",
+        1024,
+        NULL,
+        4,
+        &Task_Game_Host_Handle
+    );
+
+    xTaskCreate
+    (   Task_ADC_Joy_Acc_Timer,
+        "Task_ADC_Joy_Acc_Timer",
+        configMINIMAL_STACK_SIZE,
+        NULL,
+        5,
+        &Task_ADC_Joy_Acc_Timer_Handle
+    );
+
+    xTaskCreate
+    (   Task_ADC_Joy_Acc_Bottom_Half,
+        "Task_ADC_Joy_Acc_Bottom_Half",
+        1024,
+        NULL,
+        6,
+        &Task_ADC_Joy_Acc_Bottom_Half_Handle
     );
 
 
