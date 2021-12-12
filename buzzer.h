@@ -12,11 +12,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define BUZZER_PORT P5
-#define BUZZER_PIN  BIT6
+#define BUZZER_PORT P2
+#define BUZZER_PIN  BIT7
 
-#define BUZZER_TIMER    TIMER_A2
-#define BUZZER_CHANNEL  1
+#define BUZZER_TIMER    TIMER_A0
+#define BUZZER_CHANNEL  4
 
 /*****************************************************
  * Sets the PWM period of the Buzzer.  The duty cycle

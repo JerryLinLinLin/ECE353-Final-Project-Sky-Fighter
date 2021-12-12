@@ -7,6 +7,7 @@
 #include "serial_debug.h"
 #include "lcd.h"
 #include "am_light.h"
+#include "buzzer.h"
 
 // include IO setup for each device
 // comments are only in source file c for tidiness

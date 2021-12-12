@@ -23,6 +23,7 @@
 /* ECE353 Includes */
 #include <ece353.h>
 #include <image.h>
+#include <buzzer.h>
 #include <task_adc_joy_acc.h>
 #include <task_console.h>
 #include <task_game_host.h>

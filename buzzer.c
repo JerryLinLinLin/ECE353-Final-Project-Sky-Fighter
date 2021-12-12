@@ -56,7 +56,7 @@ void buzzer_on(void){
  * Returns:
  *      None
  */
-void ece353_MKII_Buzzer_Off(void){
+void buzzer_off(void){
     // turn off timer
     BUZZER_TIMER->CTL &= ~TIMER_A_CTL_MC_MASK;
 }

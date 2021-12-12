@@ -227,7 +227,7 @@ void Task_Game_Host(void *pvParameters)
                 }
             }
         }
-
+//        buzzer_on();
         // am light sensor change color
         if (is_dark && (am_light_get_lux() > 10)) {
             is_dark = false;

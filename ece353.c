@@ -340,5 +340,7 @@ void ece353_all_setup(void) {
 
     i2c_init();
     am_light_init();
+//    buzzer_init(3000);
+//    buzzer_on();
 
 }
