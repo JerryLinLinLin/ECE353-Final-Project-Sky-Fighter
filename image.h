@@ -18,6 +18,10 @@ extern const uint8_t ufo1Bitmaps[];
 extern const uint8_t ufo1WidthPixels;
 extern const uint8_t ufo1HeightPixels;
 
+extern const uint8_t bulletBitmaps[];
+extern const uint8_t bulletWidthPixels;
+extern const uint8_t bulletHeightPixels;
+
 typedef enum {
     RED1 = 0,
     RED2,

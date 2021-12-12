@@ -55,7 +55,14 @@ void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
     ADC_MOVE acc_prev_dir = { .center = true, .left = false, .right = false,
                               .up = false, .down = false };
 
-    ADC_joy_acc_dir current;
+    ADC_joy_acc_dir current =
+            { .joy = { .center = true, .left = false, .right = false, .up =
+                               false,
+                       .down = false },
+              .acc = { .center = true, .left = false, .right = false, .up =
+                               false,
+                       .down = false },
+              .acc_is_changed = false, .joy_is_changed = false };
 
 
     while(1)
@@ -169,7 +176,7 @@ void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
 
         }
 
-        xQueueSendToBack(Queue_Game_Host, &current, portMAX_DELAY);
+        xQueueSendToBack(Queue_Game_Host, &current, 0);
 
 
 

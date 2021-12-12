@@ -18,6 +18,13 @@ typedef struct
     int width;
 } LOCATION;
 
+typedef struct
+{
+    LOCATION loc;
+    ADC_MOVE dir;
+    bool in_use;
+} BULLET;
+
 /******************************************************************************
 * Task used to print out messages to the console
 ******************************************************************************/
@@ -26,7 +33,7 @@ void Task_Game_Host(void *pvParameters);
 LOCATION boarder_range_validate(LOCATION loc);
 bool is_in_boarder(LOCATION loc);
 
-
+bool is_collided(LOCATION loc1, LOCATION loc2);
 
 
 #endif /* TASK_CONSOLE_H_ */

@@ -6,20 +6,51 @@
  */
 #include <main.h>
 
-#define FG_COLOR (RED_5)
-#define BG_COLOR BLACK
-
 /******************************************************************************
 * Task used to print out messages to the console
 ******************************************************************************/
 void Task_Game_Host(void *pvParameters)
 {
+    // current jet location
     LOCATION jet_loc = {.x = 64, .y = 64, .height = jet_fighterHeightPixels,
                         .width = jet_fighterWidthPixels};
+    // current npc location
+    LOCATION npc_loc = { .x = 0, .y = 0, .height = 0, .width = 0 };
 
-    uint16_t fgColor = COLOR_CODE[RED1];
+    // joy and acc current status
+    ADC_joy_acc_dir current =
+            { .joy = { .center = true, .left = false, .right = false, .up =
+                               false,
+                       .down = false },
+              .acc = { .center = true, .left = false, .right = false, .up =
+                               false,
+                       .down = false },
+              .acc_is_changed = false, .joy_is_changed = false };
+
+    // jet color
+    uint16_t fgColor = COLOR_CODE[GREEN1];
     uint16_t bgColor = COLOR_CODE[BLACK];
 
+    bool current_collide = false; // collision flag
+    bool pre_is_collide = false; // detect previous collision
+
+    // create bullet list for tracking
+    int i;
+    BULLET bullet_list[10];
+    for (i = 0; i < 10; i++) {
+        LOCATION new_bullet_loc = { .x = 0, .y = 0, .height = bulletWidthPixels,
+                                    .width = bulletHeightPixels };
+        ADC_MOVE new_bullet_dir = { .center = false, .left = false, .right = false,
+                                    .up = false, .down = false };
+        bullet_list[i].loc = new_bullet_loc;
+        bullet_list[i].dir = new_bullet_dir;
+        bullet_list[i].in_use = false;
+    }
+
+    // debounce state for S1
+    uint8_t debounce_state = 0x00;
+
+    // draw initial image
     lcd_draw_image(
             jet_loc.x,
             jet_loc.y,
@@ -30,55 +61,12 @@ void Task_Game_Host(void *pvParameters)
       bgColor
     );
 
-    ADC_joy_acc_dir current;
-
     while(1)
     {
 
         xQueueReceive(Queue_Game_Host, &current, 0);
 
-//        if (current.joy.left && current.joy.up)
-//        {
-//            jet_loc.x--;
-//            jet_loc.y--;
-//            vTaskDelay(pdMS_TO_TICKS(10));
-//        }
-//        if (current.joy.right && current.joy.up)
-//        {
-//            jet_loc.x++;
-//            jet_loc.y--;
-//            vTaskDelay(pdMS_TO_TICKS(10));
-//        }
-//        if (current.joy.left && current.joy.down)
-//        {
-//            jet_loc.x--;
-//            jet_loc.y++;
-//            vTaskDelay(pdMS_TO_TICKS(10));
-//        }
-//        if (current.joy.right && current.joy.down)
-//        {
-//            jet_loc.x++;
-//            jet_loc.y++;
-//            vTaskDelay(pdMS_TO_TICKS(10));
-//        }
-//
-//        if (current.joy.left)
-//        {
-//            jet_loc.x--;
-//        }
-//        if (current.joy.right)
-//        {
-//            jet_loc.x++;
-//        }
-//        if (current.joy.up)
-//        {
-//            jet_loc.y--;
-//        }
-//        if (current.joy.down)
-//        {
-//            jet_loc.y++;
-//        }
-
+        // Control jet movement
         if (current.acc.left && current.acc.up)
         {
             jet_loc.x--;
@@ -103,7 +91,6 @@ void Task_Game_Host(void *pvParameters)
             jet_loc.y++;
             vTaskDelay(pdMS_TO_TICKS(10));
         }
-
         if (current.acc.left)
         {
             jet_loc.x--;
@@ -120,9 +107,19 @@ void Task_Game_Host(void *pvParameters)
         {
             jet_loc.y++;
         }
+//        else {}
 
         jet_loc = boarder_range_validate(jet_loc);
 
+        // Collision detection
+        xQueueReceive(Queue_Game_Collision, &npc_loc, 0);
+        bool current_collide = is_collided(jet_loc, npc_loc);
+        if (current_collide && !pre_is_collide) {
+            printf("DEBUG: IS COLLIDED\n\r");
+        }
+        pre_is_collide = current_collide;
+
+        // render image
         xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
         lcd_draw_image(
           jet_loc.x,
@@ -134,6 +131,139 @@ void Task_Game_Host(void *pvParameters)
           bgColor
         );
         xSemaphoreGive(Sem_RENDER);
+
+        int q;
+        for (q = 0; q < 10; q++) {
+            if (bullet_list[q].in_use) {
+                // if it is in boarder or hit npc
+                if (is_in_boarder(bullet_list[q].loc) || is_collided(npc_loc, bullet_list[q].loc)) {
+                    // render bullet
+                    xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
+                                    lcd_draw_image(
+                                      bullet_list[q].loc.x,
+                                      bullet_list[q].loc.y,
+                                      bullet_list[q].loc.width,
+                                      bullet_list[q].loc.height,
+                                      bulletBitmaps,
+                                      COLOR_CODE[BLACK],
+                                      COLOR_CODE[BLACK]
+                                    );
+                    xSemaphoreGive(Sem_RENDER);
+                    bullet_list[q].in_use = false;
+                }
+                else {
+                    // render bullet
+                    xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
+                    lcd_draw_image(
+                      bullet_list[q].loc.x,
+                      bullet_list[q].loc.y,
+                      bullet_list[q].loc.width,
+                      bullet_list[q].loc.height,
+                      bulletBitmaps,
+                      COLOR_CODE[WHITE],
+                      COLOR_CODE[BLACK]
+                    );
+                    xSemaphoreGive(Sem_RENDER);
+                }
+
+                if (bullet_list[q].dir.left && bullet_list[q].dir.up) {
+                    bullet_list[q].loc.x--;
+                    bullet_list[q].loc.y--;
+                }
+                else if (bullet_list[q].dir.right && bullet_list[q].dir.up) {
+                    bullet_list[q].loc.x++;
+                    bullet_list[q].loc.y--;
+                }
+                else if (bullet_list[q].dir.left && bullet_list[q].dir.down) {
+                    bullet_list[q].loc.x--;
+                    bullet_list[q].loc.y++;
+                }
+                else if (bullet_list[q].dir.right && bullet_list[q].dir.down) {
+                    bullet_list[q].loc.x++;
+                    bullet_list[q].loc.y++;
+                }
+                else if (bullet_list[q].dir.left){
+                    bullet_list[q].loc.x--;
+                }
+                else if (bullet_list[q].dir.right){
+                    bullet_list[q].loc.x++;
+                }
+                else if (bullet_list[q].dir.up){
+                    bullet_list[q].loc.y--;
+                }
+                else if (bullet_list[q].dir.down){
+                    bullet_list[q].loc.y++;
+                }
+                else {}
+
+            }
+        }
+
+        debounce_state = debounce_state << 1;
+        if (ece353_s1_pressed())
+        {
+            debounce_state = debounce_state | BIT0;
+        }
+        if (debounce_state == 0x7F)
+        {
+            bool bypass = false;
+            for (q = 0; q < 10; q++) {
+                if (bypass) {
+                    continue;
+                }
+                if (!bullet_list[q].in_use && current.joy.center!=true) {
+                    bullet_list[q].in_use = true;
+                    bullet_list[q].dir = current.joy;
+                    bullet_list[q].loc.x = jet_loc.x;
+                    bullet_list[q].loc.y = jet_loc.y;
+                    bypass = true;
+                }
+            }
+        }
+
+        //        if (current.joy.left && current.joy.up)
+        //        {
+        //            jet_loc.x--;
+        //            jet_loc.y--;
+        //            vTaskDelay(pdMS_TO_TICKS(10));
+        //        }
+        //        if (current.joy.right && current.joy.up)
+        //        {
+        //            jet_loc.x++;
+        //            jet_loc.y--;
+        //            vTaskDelay(pdMS_TO_TICKS(10));
+        //        }
+        //        if (current.joy.left && current.joy.down)
+        //        {
+        //            jet_loc.x--;
+        //            jet_loc.y++;
+        //            vTaskDelay(pdMS_TO_TICKS(10));
+        //        }
+        //        if (current.joy.right && current.joy.down)
+        //        {
+        //            jet_loc.x++;
+        //            jet_loc.y++;
+        //            vTaskDelay(pdMS_TO_TICKS(10));
+        //        }
+        //
+        //        if (current.joy.left)
+        //        {
+        //            jet_loc.x--;
+        //        }
+        //        if (current.joy.right)
+        //        {
+        //            jet_loc.x++;
+        //        }
+        //        if (current.joy.up)
+        //        {
+        //            jet_loc.y--;
+        //        }
+        //        if (current.joy.down)
+        //        {
+        //            jet_loc.y++;
+        //        }
+
+        // delay task
         vTaskDelay(pdMS_TO_TICKS(5));
 
     }
@@ -190,6 +320,33 @@ LOCATION boarder_range_validate(LOCATION loc) {
     }
 
     return current;
+}
+
+bool is_collided(LOCATION loc1, LOCATION loc2)
+{
+    int xA_0, xA_1, yA_0, yA_1;
+
+    xA_0 = loc1.x - (loc1.width/2) + 2;
+    xA_1 = loc1.x + (loc1.width/2) - 2;
+
+    yA_0 = loc1.y  - (loc1.height/2) + 2;
+    yA_1 = loc1.y  + (loc1.height/2) - 2;
+
+    int xB_0, xB_1, yB_0, yB_1;
+
+    xB_0 = loc2.x - (loc2.width/2) + 2;
+    xB_1 = loc2.x + (loc2.width/2) - 2;
+
+    yB_0 = loc2.y  - (loc2.height/2) + 2;
+    yB_1 = loc2.y  + (loc2.height/2) - 2;
+
+    if ((((xA_0 < xB_0) && (xB_0 < xA_1)) || ((xA_0 < xB_1) && (xB_1 < xA_1)))
+            && (((yA_0 < yB_0) && (yB_0 < yA_1))
+                    || ((yA_0 < yB_1) && (yB_1 < yA_1))))
+    {
+        return true;
+    }
+    return false;
 }
 
 

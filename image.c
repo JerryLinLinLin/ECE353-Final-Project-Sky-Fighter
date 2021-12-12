@@ -92,4 +92,22 @@ const uint16_t COLOR_CODE[14] = { 0xf800, 0xc0a5, 0xfe23, 0xffe3, 0xfb85,
                                   0xe3c5, 0xe3dd, 0xabdd, 0x43dd, 0x459d,
                                   0x46c8, 0x6ecf, 0xffff, 0x0000 };
 
+/*
+**  Image data for bullet
+*/
+
+const uint8_t bulletBitmaps[] =
+{
+    0x00, //
+    0x10, //    #
+    0x38, //   ###
+    0x7C, //  #####
+    0x38, //   ###
+    0x10, //    #
+    0x00, //
+};
+
+/* Bitmap sizes for bullet */
+const uint8_t bulletWidthPixels = 7;
+const uint8_t bulletHeightPixels = 7;
 

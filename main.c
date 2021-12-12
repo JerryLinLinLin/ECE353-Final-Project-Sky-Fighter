@@ -49,8 +49,9 @@ int main(void)
     printf("*********************************************\n\r");
     printf("\n\r");
 
-    Queue_Console = xQueueCreate(10,sizeof(ADC_joy_acc_dir));
-    Queue_Game_Host = xQueueCreate(10,sizeof(ADC_joy_acc_dir));
+    Queue_Console = xQueueCreate(100,sizeof(ADC_joy_acc_dir));
+    Queue_Game_Host = xQueueCreate(100,sizeof(ADC_joy_acc_dir));
+    Queue_Game_Collision = xQueueCreate(100,sizeof(LOCATION));
 
     Sem_RENDER = xSemaphoreCreateBinary();
     xSemaphoreGive(Sem_RENDER);
@@ -65,27 +66,27 @@ int main(void)
     );
 
     xTaskCreate
-    (   Task_Game_NPC,
-        "Task_Game_NPC1",
+    (   Task_Game_Controller,
+        "Task_Game_Controller",
         configMINIMAL_STACK_SIZE,
         NULL,
         2,
-        &Task_Game_NPC1_Handle
+        &Task_Game_Controller_Handle
     );
 
     xTaskCreate
     (   Task_Game_NPC,
-        "Task_Game_NPC2",
+        "Task_Game_NPC",
         configMINIMAL_STACK_SIZE,
-        NULL,
+        1024,
         3,
-        &Task_Game_NPC2_Handle
+        &Task_Game_NPC_Handle
     );
 
     xTaskCreate
     (   Task_Game_Host,
         "Task_Game_Host",
-        configMINIMAL_STACK_SIZE,
+        1024,
         NULL,
         4,
         &Task_Game_Host_Handle
@@ -94,7 +95,7 @@ int main(void)
     xTaskCreate
     (   Task_ADC_Joy_Acc_Timer,
         "Task_ADC_Joy_Acc_Timer",
-        configMINIMAL_STACK_SIZE,
+        1024,
         NULL,
         5,
         &Task_ADC_Joy_Acc_Timer_Handle
@@ -103,7 +104,7 @@ int main(void)
     xTaskCreate
     (   Task_ADC_Joy_Acc_Bottom_Half,
         "Task_ADC_Joy_Acc_Bottom_Half",
-        configMINIMAL_STACK_SIZE,
+        1024,
         NULL,
         6,
         &Task_ADC_Joy_Acc_Bottom_Half_Handle

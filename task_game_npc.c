@@ -87,6 +87,8 @@ void Task_Game_NPC(void *pvParameters)
         }
 
         ufo1_loc = boarder_range_validate(ufo1_loc);
+        xQueueSendToBack(Queue_Game_Collision, &ufo1_loc, 50);
+
         xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
         lcd_draw_image(
                 ufo1_loc.x,
