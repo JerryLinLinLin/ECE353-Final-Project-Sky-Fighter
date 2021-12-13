@@ -24,7 +24,16 @@ int main(void)
     printf("ECE 353 Final Project - Sky Fighter \n\r");
     printf("*********************************************\n\r");
     printf("\n\r");
-    printf("Description: You will need to control a jet fighter to defeat Alien! Good Luck Commander! \n\r");
+    printf("Goal: You will need to control a jet fighter to defeat Alien! Use your gun to fight against them and remember do not be caught. "
+            "Good Luck Commander! \n\r");
+    printf("\n\r");
+    printf("Key Control: \n\r");
+    printf("        Accelerometer:  Move fighter in left, right, up, down, and diagonal. \n\r");
+    printf("        Joystick:       Control your gun direction. Target to Alien! \n\r");
+    printf("        S1 Button:      Press to shoot a bullet! \n\r");
+    printf("\n\r");
+    printf("Long Press S1 Button to Start the Game...");
+    printf("\n\r");
 
     // initialize queue
     Queue_Game_ADC_to_Host = xQueueCreate(100,sizeof(ADC_joy_acc_dir));
