@@ -17,7 +17,15 @@ void Task_Game_NPC(void *pvParameters);
 
 ADC_MOVE generate_random_dir(void);
 
-
+typedef struct
+{
+    int height;
+    int width;
+    int type;
+    const uint8_t *image;
+    COLOR_INDEX color;
+    int hp;
+} NPC_TYPE;
 
 
 #endif /* TASK_CONSOLE_H_ */

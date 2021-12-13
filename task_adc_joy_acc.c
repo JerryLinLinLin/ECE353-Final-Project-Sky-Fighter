@@ -70,7 +70,6 @@ void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
         /* ADD CODE
          * Wait until we get a task notification from the ADC14 ISR
          */
-        int j = 1;
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
         // joystick
@@ -172,12 +171,7 @@ void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
         current.acc_is_changed = !ADC_MOVE_compare(&acc_dir, &acc_prev_dir);
 
         // send
-        if (current.joy_is_changed || current.acc_is_changed) {
-            xQueueSendToBack(Queue_Console, &current, portMAX_DELAY);
-
-        }
-
-        xQueueSendToBack(Queue_Game_Host, &current, 0);
+        xQueueSendToBack(Queue_Game_ADC_to_Host, &current, 0);
 
         /* ADD CODE
          * Update the prev_dir of the joystick

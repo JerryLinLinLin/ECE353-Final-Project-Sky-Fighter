@@ -11,8 +11,11 @@
 ******************************************************************************/
 void Task_Game_Host(void *pvParameters)
 {
+    // wait for controller
+    xSemaphoreTake(Sem_GAME_HOST, portMAX_DELAY);
+
     // current jet location
-    LOCATION jet_loc = {.x = 64, .y = 64, .height = jet_fighterHeightPixels,
+    LOCATION jet_loc = {.x = 64, .y = 100, .height = jet_fighterHeightPixels,
                         .width = jet_fighterWidthPixels};
     // current npc location
     LOCATION npc_loc = { .x = 0, .y = 0, .height = 0, .width = 0 };
@@ -32,7 +35,6 @@ void Task_Game_Host(void *pvParameters)
     uint16_t bgColor = COLOR_CODE[BLACK];
 
     // collision
-    bool current_collide = false; // collision flag
     bool pre_is_collide = false; // detect previous collision
 
     // am light sensor change color
@@ -54,21 +56,9 @@ void Task_Game_Host(void *pvParameters)
     // debounce state for S1
     uint8_t debounce_state = 0x00;
 
-    // draw initial image
-    lcd_draw_image(
-            jet_loc.x,
-            jet_loc.y,
-            jet_loc.width,
-            jet_loc.height,
-      jet_fighterBitmaps,
-      fgColor,
-      bgColor
-    );
-
     while(1)
     {
-
-        xQueueReceive(Queue_Game_Host, &current, 0);
+        xQueueReceive(Queue_Game_ADC_to_Host, &current, 0);
 
         // Control jet movement
         if (current.acc.left && current.acc.up)
@@ -112,10 +102,14 @@ void Task_Game_Host(void *pvParameters)
         jet_loc = boarder_range_validate(jet_loc);
 
         // Collision detection
-        xQueueReceive(Queue_Game_Collision, &npc_loc, 0);
+        xQueueReceive(Queue_Game_NPC_to_Host, &npc_loc, 0);
         bool current_collide = is_collided(jet_loc, npc_loc);
         if (current_collide && !pre_is_collide) {
-//            printf("DEBUG: IS COLLIDED\n\r");
+            bool win = false;
+            xSemaphoreTake(Sem_PRINT, portMAX_DELAY);
+            printf("YOU LOST!\n\r");
+            xSemaphoreGive(Sem_PRINT);
+            xQueueSendToBack(Queue_Game_Host_to_Controller, &win, 0);
         }
         pre_is_collide = current_collide;
 
@@ -139,7 +133,7 @@ void Task_Game_Host(void *pvParameters)
                 // if it is in boarder or hit npc
                 if (is_collided(npc_loc, bullet_list[q].loc)) {
                     bool flash = 1;
-                    xQueueSendToBack(Queue_Game_NPC, &flash, 0);
+                    xQueueSendToBack(Queue_Game_Host_to_NPC, &flash, 0);
 
                 }
                 if (is_in_boarder(bullet_list[q].loc) || is_collided(npc_loc, bullet_list[q].loc)) {
@@ -328,7 +322,6 @@ bool is_collided(LOCATION loc1, LOCATION loc2)
 
 int generate_random_in_range(int lower, int upper)
 {
-    int i;
     int num = (rand() % (upper - lower + 1)) + lower;
     return num;
 }

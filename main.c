@@ -45,35 +45,39 @@ int main(void)
 
     printf("\n\r");
     printf("*********************************************\n\r");
-    printf("ECE 353 Final Project \n\r");
+    printf("ECE 353 Final Project - Sky Fighter \n\r");
     printf("*********************************************\n\r");
     printf("\n\r");
 
-    Queue_Console = xQueueCreate(100,sizeof(ADC_joy_acc_dir));
-    Queue_Game_Host = xQueueCreate(100,sizeof(ADC_joy_acc_dir));
-    Queue_Game_Collision = xQueueCreate(100,sizeof(LOCATION));
-    Queue_Game_NPC = xQueueCreate(1,sizeof(bool));
+    Queue_Game_ADC_to_Host = xQueueCreate(100,sizeof(ADC_joy_acc_dir));
+    Queue_Game_NPC_to_Host = xQueueCreate(100,sizeof(LOCATION));
+    Queue_Game_Host_to_NPC = xQueueCreate(1,sizeof(bool));
+    Queue_Game_Host_to_Controller = xQueueCreate(1,sizeof(bool));
 
     Sem_RENDER = xSemaphoreCreateBinary();
     xSemaphoreGive(Sem_RENDER);
-
-    xTaskCreate
-    (   Task_Console,
-        "Task_Console",
-        configMINIMAL_STACK_SIZE,
-        NULL,
-        1,
-        &Task_Console_Handle
-    );
+    Sem_PRINT = xSemaphoreCreateBinary();
+    xSemaphoreGive(Sem_PRINT);
+    Sem_GAME_HOST = xSemaphoreCreateBinary();
+    Sem_GAME_NPC = xSemaphoreCreateBinary();
 
 //    xTaskCreate
-//    (   Task_Game_Controller,
-//        "Task_Game_Controller",
+//    (   Task_Console,
+//        "Task_Console",
 //        configMINIMAL_STACK_SIZE,
 //        NULL,
-//        2,
-//        &Task_Game_Controller_Handle
+//        1,
+//        &Task_Console_Handle
 //    );
+
+    xTaskCreate
+    (   Task_Game_Controller,
+        "Task_Game_Controller",
+        configMINIMAL_STACK_SIZE,
+        NULL,
+        2,
+        &Task_Game_Controller_Handle
+    );
 
     xTaskCreate
     (   Task_Game_NPC,
@@ -98,7 +102,7 @@ int main(void)
         "Task_ADC_Joy_Acc_Timer",
         configMINIMAL_STACK_SIZE,
         NULL,
-        5,
+        6,
         &Task_ADC_Joy_Acc_Timer_Handle
     );
 
@@ -107,7 +111,7 @@ int main(void)
         "Task_ADC_Joy_Acc_Bottom_Half",
         1024,
         NULL,
-        6,
+        7,
         &Task_ADC_Joy_Acc_Bottom_Half_Handle
     );
 
@@ -116,7 +120,6 @@ int main(void)
     vTaskStartScheduler();
 
     while(1){};
-    return (0);
 }
 
 //*****************************************************************************
