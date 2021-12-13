@@ -46,10 +46,10 @@ TaskHandle_t Task_ADC_Joy_Acc_Timer_Handle;
 TaskHandle_t Task_Song_Handle;
 
 // define queue
-QueueHandle_t Queue_Game_ADC_to_Host;
-QueueHandle_t Queue_Game_Host_to_NPC;
-QueueHandle_t Queue_Game_NPC_to_Host;
-QueueHandle_t Queue_Game_Host_NPC_to_Controller;
-QueueHandle_t Queue_Song;
+QueueHandle_t Queue_Game_ADC_to_Host; // Sending the JOY and ACC info to host
+QueueHandle_t Queue_Game_Host_to_NPC; // Sending bullet info to npc to check if bullet hit a npc
+QueueHandle_t Queue_Game_NPC_to_Host; // Sending npc location to host to check collision
+QueueHandle_t Queue_Game_Host_NPC_to_Controller; // Sending flag to mark the end of game (win or lose)
+QueueHandle_t Queue_Song; // Choosing which sound to play
 
 #endif /* MAIN_H_ */

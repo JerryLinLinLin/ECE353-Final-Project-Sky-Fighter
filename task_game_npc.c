@@ -150,15 +150,15 @@ void Task_Game_NPC(void *pvParameters)
                         COLOR_CODE[YELLOW1]
                 );
                 xSemaphoreGive(Sem_RENDER);
-                vTaskDelay(pdMS_TO_TICKS(1000)); // delay
+                vTaskDelay(pdMS_TO_TICKS(500)); // delay
                level++; // increase level
-               lcd_draw_image(
-                       ufo1_loc.x,
-                       ufo1_loc.y,
-                       explosionWidthPixels,
-                       explosionHeightPixels,
-                       explosionBitmaps,
-                       COLOR_CODE[BLACK],
+
+               xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
+               lcd_draw_rectangle(
+                       64,
+                       64,
+                       128,
+                       128,
                        COLOR_CODE[BLACK]
                );
                xSemaphoreGive(Sem_RENDER);
@@ -176,7 +176,7 @@ void Task_Game_NPC(void *pvParameters)
 
                 // re initialize npc
                 new_npc = true;
-                cuurent_npc.hp = 20;
+                cuurent_npc.hp = 15;
                 cuurent_npc.image = ufo2Bitmaps;
                 cuurent_npc.height = ufo2HeightPixels;
                 cuurent_npc.width = ufo2WidthPixels;
@@ -185,7 +185,7 @@ void Task_Game_NPC(void *pvParameters)
                 ufo1_loc.y = 20;
                 ufo1_loc.height = cuurent_npc.height;
                 ufo1_loc.width = cuurent_npc.width;
-
+                vTaskDelay(pdMS_TO_TICKS(500)); // delay
             }
 
             // render image with white for flash
