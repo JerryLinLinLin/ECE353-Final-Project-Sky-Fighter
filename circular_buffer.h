@@ -1,7 +1,8 @@
 /*
- * Circular_Buffer.h
+ * circular_buffer.h
  *
  * Author: Hai Lin
+ * Author: Andres Quintanal Escandon
  */
 
 #ifndef Circular_Buffer_H_

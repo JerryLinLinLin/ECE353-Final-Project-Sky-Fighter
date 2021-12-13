@@ -1,8 +1,8 @@
 /*
- * task_console.h
+ * task_game_controller.h
  *
- *  Created on: Oct 21, 2020
- *      Author: Joe Krachey
+ * Author: Hai Lin
+ * Author: Andres Quintanal Escandon
  */
 
 #ifndef TASK_GAME_CONTROLLER_H_
@@ -11,9 +11,9 @@
 #include <main.h>
 
 /******************************************************************************
-* Task used to manage game process
+* Task used to manage game process, to start the game and check end condition
 ******************************************************************************/
 void Task_Game_Controller(void *pvParameters);
 
 
-#endif /* TASK_CONSOLE_H_ */
+#endif

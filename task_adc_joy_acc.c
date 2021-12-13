@@ -1,8 +1,8 @@
 /*
- * task_led.c
+ * task_adc_joy_acc.c
  *
- *  Created on: Oct 19, 2020
- *      Author: Joe Krachey
+ * Author: Hai Lin
+ * Author: Andres Quintanal Escandon
  */
 
 #include <main.h>
@@ -39,7 +39,7 @@
 
 
 /******************************************************************************
-* Bottom Half Task.  Examines the ADC data from the joystick on the MKII
+* Bottom Half Task.  Examines the ADC data from the joy/acc on the MKII
 ******************************************************************************/
 void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
 {
@@ -72,7 +72,7 @@ void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
          */
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
-        // joystick
+        // check joy dir
         if(JOYSTICK_X_DIR < VOLT_0P85)
         {
            joy_dir.left = true;
@@ -117,7 +117,7 @@ void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
             joy_dir.center = false;
         }
 
-        // accelerometer
+        // accelerometer dir
         if((ACC_X_DIR > (VOLT_2P31 - (ACC_RANGE * 5))) &&  (ACC_X_DIR < (VOLT_2P31 + (ACC_RANGE * 5))))
         {
            acc_dir.right = true;
@@ -179,13 +179,12 @@ void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
         joy_prev_dir = joy_dir;
         acc_prev_dir = acc_dir;
 
-//        vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
 
 
 /******************************************************************************
-* Top Half of ADC14 Handler.
+* ADC14 IRQ Handler
 ******************************************************************************/
 void ADC14_IRQHandler(void)
 {
@@ -204,9 +203,14 @@ void ADC14_IRQHandler(void)
      */
     vTaskNotifyGiveFromISR(Task_ADC_Joy_Acc_Bottom_Half_Handle, &xHigherPriorityTaskWoken);
     portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-//    vTaskDelay(pdMS_TO_TICKS(50));
 }
 
+/**
+ * Compare two ADC_MOVE structure if they are same
+ * @param m1
+ * @param m2
+ * @return true if same, false otherwise
+ */
 bool ADC_MOVE_compare(ADC_MOVE *m1, ADC_MOVE *m2)
 {
     if (m1->center == m2->center && m1->left == m2->left

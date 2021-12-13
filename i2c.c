@@ -1,8 +1,8 @@
 /*
  * i2c.c
  *
- *  Created on: Sep 25, 2020
- *      Author: Joe Krachey
+ * Author: Hai Lin
+ * Author: Andres Quintanal Escandon
  */
 
 #include "i2c.h"
@@ -100,7 +100,7 @@ static __inline void i2c_clear_interrupts(void)
 }
 
 /**********************************************************************************************
- *
+ * Initialize I2C
  **********************************************************************************************/
 void i2c_init(void)
 {
@@ -124,7 +124,7 @@ void i2c_init(void)
 
 
 /**********************************************************************************************
- *
+ * Write an I2C device
  **********************************************************************************************/
 void i2c_write_16(uint8_t subordinate_address, uint8_t reg_address, uint16_t data)
 {
@@ -173,7 +173,7 @@ void i2c_write_16(uint8_t subordinate_address, uint8_t reg_address, uint16_t dat
 }
 
 /**********************************************************************************************
- *
+ * Read an I2C device
  **********************************************************************************************/
 uint16_t i2c_read_16(uint8_t subordinate_address, uint8_t reg_address)
 {

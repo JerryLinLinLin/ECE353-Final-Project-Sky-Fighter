@@ -1,8 +1,8 @@
 /*
- * task_console.h
+ * task_game_npc.h
  *
- *  Created on: Oct 21, 2020
- *      Author: Joe Krachey
+ * Author: Hai Lin
+ * Author: Andres Quintanal Escandon
  */
 
 #ifndef TASK_GAME_NPC_H_
@@ -10,13 +10,9 @@
 
 #include <main.h>
 
-/******************************************************************************
-* Task used to print out messages to the console
-******************************************************************************/
-void Task_Game_NPC(void *pvParameters);
-
-ADC_MOVE generate_random_dir(void);
-
+/**
+ * struct to store a npc and use as object
+ */
 typedef struct
 {
     int height;
@@ -27,5 +23,16 @@ typedef struct
     int hp;
 } NPC_TYPE;
 
+/******************************************************************************
+* Task used to handle the movement of npc
+******************************************************************************/
+void Task_Game_NPC(void *pvParameters);
 
-#endif /* TASK_CONSOLE_H_ */
+/**
+ * generate random direction for npc random movement
+ * @return ADC_MOVE dir
+ */
+ADC_MOVE generate_random_dir(void);
+
+
+#endif

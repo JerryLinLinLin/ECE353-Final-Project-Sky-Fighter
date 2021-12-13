@@ -1,3 +1,10 @@
+/*
+ * ece353.c
+ *
+ * Author: Hai Lin
+ * Author: Andres Quintanal Escandon
+ */
+
 #include "ece353.h"
 
 /* ***************************************************
@@ -326,7 +333,9 @@ void ece353_ADC14_PS2_XY_ACCELER_INI(void)
 
 }
 
-// setup all
+/**
+ * setup all necessary code for this project
+ */
 void ece353_all_setup(void) {
     ece353_button1_init();
     ece353_button2_init();
@@ -335,7 +344,7 @@ void ece353_all_setup(void) {
     ece353_MKII_RGB_IO_Init(false);
     ece353_ADC14_PS2_XY_ACCELER_INI();
 
-    serial_debug_init();
+    serial_debug_init(); // ini urat
     lcd_init();
 
     i2c_init();

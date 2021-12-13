@@ -1,30 +1,32 @@
 /*
- * task_console.c
+ * task_game_controller.c
  *
- *  Created on: Oct 21, 2020
- *      Author: Joe Krachey
+ * Author: Hai Lin
+ * Author: Andres Quintanal Escandon
  */
+
 #include <main.h>
 
 
 /******************************************************************************
-* Task used to manage game process
+* Task used to manage game process, to start the game and check end condition
 ******************************************************************************/
 void Task_Game_Controller(void *pvParameters)
 {
-    int phase = 0;
+    int phase = 0; // detect current process phase
 
-    int press_start_flash_count = 0;
+    int press_start_flash_count = 0; // count for flash press start
 
-    uint8_t S1_debounce_state = 0x00;
+    uint8_t S1_debounce_state = 0x00; // s1 debouce
 
-    bool is_intro_song_sent = false;
-    bool is_game_over_song_sent = false;
+    bool is_intro_song_sent = false; // flag to hold intro song
+    bool is_game_over_song_sent = false; // flag to hold game over song
 
     while(1)
     {
-        S1_debounce_state = S1_debounce_state << 1;
+        S1_debounce_state = S1_debounce_state << 1; // move debounce
 
+        // welcome screen
         if (phase == 0) {
 
             // Render Title
@@ -79,7 +81,7 @@ void Task_Game_Controller(void *pvParameters)
             }
             if (S1_debounce_state == 0x7F)
             {
-                phase = 1;
+                phase = 1; // start game
                 // Render to empty screen
                 xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
                 lcd_draw_rectangle(
@@ -100,10 +102,13 @@ void Task_Game_Controller(void *pvParameters)
                 xSemaphoreGive(Sem_GAME_NPC);
             }
         }
+        // game is running
         if (phase == 1) {
             bool win = false;
+            // wait until receive a result
             xQueueReceive(Queue_Game_Host_NPC_to_Controller, &win, portMAX_DELAY);
             if (win) {
+                // suspend game processes
                 vTaskSuspend(Task_Game_Host_Handle);
                 vTaskSuspend(Task_Game_NPC_Handle);
                 // render win screen
@@ -121,12 +126,13 @@ void Task_Game_Controller(void *pvParameters)
 
                 if (!is_game_over_song_sent) {
                     is_game_over_song_sent = true;
-                    // send song
+                    // send song you win
                     SOUND sound = YOU_WIN;
                     xQueueSendToBack(Queue_Song, &sound, 0);
                 }
             }
             else {
+                // suspend game processes
                 vTaskSuspend(Task_Game_Host_Handle);
                 vTaskSuspend(Task_Game_NPC_Handle);
                 // render game over screen
@@ -144,7 +150,7 @@ void Task_Game_Controller(void *pvParameters)
 
                 if (!is_game_over_song_sent) {
                     is_game_over_song_sent = true;
-                    // send song
+                    // send song game over
                     SOUND sound = GAME_OVER;
                     xQueueSendToBack(Queue_Song, &sound, 0);
                 }

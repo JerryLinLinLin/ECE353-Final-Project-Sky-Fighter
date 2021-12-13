@@ -1,10 +1,17 @@
+/*
+ * buzzer.c
+ *
+ * Author: Hai Lin
+ * Author: Andres Quintanal Escandon
+ */
+
 #include "buzzer.h"
 
 /*
- * Initializes hardware to use buzzer
+ * Initialize Buzzer
  *
  * Parameters:
- *      ticks_period    :   period of PWM pulse
+ *      None
  * Returns:
  *      None
  */

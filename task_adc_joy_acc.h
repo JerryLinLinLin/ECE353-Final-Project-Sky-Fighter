@@ -1,8 +1,8 @@
 /*
- * task_print1.h
+ * task_adc_joy_acc.h
  *
- *  Created on: Oct 19, 2020
- *      Author: Joe Krachey
+ * Author: Hai Lin
+ * Author: Andres Quintanal Escandon
  */
 
 #ifndef TASK_ADC_JOY_ACC_H_
@@ -19,7 +19,9 @@
 #define VOLT_1P65 ((int)(1.65/(3.3/4096))) // 2048      // 1.65 /(3.3/4096)
 #define ACC_RANGE 100       // Error range of accelerometer
 
-
+/**
+ * store and record an adc movement
+ */
 typedef struct
 {
     bool center;
@@ -29,6 +31,9 @@ typedef struct
     bool down;
 } ADC_MOVE;
 
+/**
+ * used to send to other tasks
+ */
 typedef struct
 {
     ADC_MOVE joy;
@@ -48,8 +53,17 @@ void Task_ADC_Joy_Acc_Timer(void *pvParameters);
 ******************************************************************************/
 void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters);
 
+/******************************************************************************
+* ADC14 IRQ Handler
+******************************************************************************/
 void ADC14_IRQHandler(void);
 
+/**
+ * Compare two ADC_MOVE structure if they are same
+ * @param m1
+ * @param m2
+ * @return true if same, false otherwise
+ */
 bool ADC_MOVE_compare(ADC_MOVE *m1, ADC_MOVE *m2);
 
 

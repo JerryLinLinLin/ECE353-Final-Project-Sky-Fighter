@@ -2,6 +2,7 @@
  * serial_debug.c
  *
  * Author: Hai Lin
+ * Author: Andres Quintanal Escandon
  */
 
 #include "serial_debug.h"

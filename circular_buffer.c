@@ -2,6 +2,7 @@
  * circular_buffer.c
  *
  * Author: Hai Lin
+ * Author: Andres Quintanal Escandon
  */
 
 #include "circular_buffer.h"

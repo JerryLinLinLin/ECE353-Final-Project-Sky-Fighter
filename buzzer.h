@@ -1,8 +1,8 @@
 /*
  * buzzer.h
  *
- *  Created on: Jun 22, 2021
- *      Author: Joe Krachey
+ * Author: Hai Lin
+ * Author: Andres Quintanal Escandon
  */
 
 #ifndef BUZZER_H_
@@ -18,49 +18,56 @@
 #define BUZZER_TIMER    TIMER_A0
 #define BUZZER_CHANNEL  4
 
-/*****************************************************
- * Sets the PWM period of the Buzzer.  The duty cycle
- * will be set to 50%
+/*
+ * Initialize Buzzer
  *
- * Parameters
- *      ticks_period    :   Period of PWM Pulse
- * Returns
+ * Parameters:
  *      None
- *****************************************************/
+ * Returns:
+ *      None
+ */
 void buzzer_init(void);
 
-/*****************************************************
- * Turns the Buzzer on
+/*
+ * Turns buzzer on
  *
- * Parameters
+ * Parameters:
  *      None
- * Returns
+ * Returns:
  *      None
- *****************************************************/
+ */
 void buzzer_on(void);
 
 
-/*****************************************************
- * Turns the Buzzer off
+/*
+ * Turns buzzer oFF
  *
- * Parameters
+ * Parameters:
  *      None
- * Returns
+ * Returns:
  *      None
- *****************************************************/
+ */
 void buzzer_off(void);
 
+/*
+ * Set current buzzer tone
+ *
+ * Parameters:
+ *      ticks_period tone to set
+ * Returns:
+ *      None
+ */
 void play_tone(int ticks_period);
 
-/*****************************************************
- * Check Buzzer Run Status
+/*
+ * Checks buzzer run status
  *
- * Parameters
+ * Parameters:
  *      None
- * Returns
- *      True  if TimerA0 is On.
- *      False if TimerA0 is Off
- *****************************************************/
+ * Returns:
+ *      true    :   timer0A is on
+ *      false   :   timer0A is off
+ */
 bool buzzer_run_status(void);
 
 #endif /* BUZZER_H_ */

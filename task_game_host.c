@@ -1,13 +1,14 @@
 /*
- * task_console.c
+ * task_game_host.c
  *
- *  Created on: Oct 21, 2020
- *      Author: Joe Krachey
+ * Author: Hai Lin
+ * Author: Andres Quintanal Escandon
  */
+
 #include <main.h>
 
 /******************************************************************************
-* Task used to print out messages to the console
+* Task to handle player's action, movement, shooting, and collision with npc
 ******************************************************************************/
 void Task_Game_Host(void *pvParameters)
 {
@@ -135,7 +136,7 @@ void Task_Game_Host(void *pvParameters)
                     // send song
                     SOUND sound = NPC_KILLED;
                     xQueueSendToBack(Queue_Song, &sound, 0);
-
+                    // send hitting message to npc
                     bool flash = 1;
                     xQueueSendToBack(Queue_Game_Host_to_NPC, &flash, 0);
 
@@ -211,18 +212,20 @@ void Task_Game_Host(void *pvParameters)
         }
         if (debounce_state == 0x7F)
         {
+            // ready to shoot
             bool bypass = false;
             for (q = 0; q < 5; q++) {
                 if (bypass) {
                     continue;
                 }
                 if (!bullet_list[q].in_use && current.joy.center!=true) {
+                    // use this bullet, start movement
                     bullet_list[q].in_use = true;
                     bullet_list[q].dir = current.joy;
                     bullet_list[q].loc.x = jet_loc.x;
                     bullet_list[q].loc.y = jet_loc.y;
 
-                    // send song
+                    // send shooting sound effect
                     SOUND sound = PLAYER_SHOOTING;
                     xQueueSendToBack(Queue_Song, &sound, 0);
 
@@ -230,7 +233,6 @@ void Task_Game_Host(void *pvParameters)
                 }
             }
         }
-//        buzzer_on();
         // am light sensor change color
         if (is_dark && (am_light_get_lux() > 10)) {
             is_dark = false;
@@ -241,14 +243,17 @@ void Task_Game_Host(void *pvParameters)
             fgColor = COLOR_CODE[generate_random_in_range(0, 12)];
         }
 
-
-
         // delay task
         vTaskDelay(pdMS_TO_TICKS(5));
 
     }
 }
-
+/**
+ * Detect if this location is in boarder
+ *
+ * @param loc to detect
+ * @return true if in, false otherwise
+ */
 bool is_in_boarder(LOCATION loc)
 {
 
@@ -266,6 +271,12 @@ bool is_in_boarder(LOCATION loc)
     return false;
 }
 
+/**
+ * Reset the location if it is invalid (exceed the range)
+ *
+ * @param loc to check
+ * @return new loc that is valid
+ */
 LOCATION boarder_range_validate(LOCATION loc) {
 
     LOCATION current;
@@ -282,6 +293,7 @@ LOCATION boarder_range_validate(LOCATION loc) {
     y0 = loc.y  - (loc.height/2);
     y1 = loc.y  + (loc.height/2);
 
+    // check if exceed
     if (x0 < 2) {
         int exceed = 2- x0;
         current.x = loc.x + exceed;
@@ -302,6 +314,12 @@ LOCATION boarder_range_validate(LOCATION loc) {
     return current;
 }
 
+/**
+ * Detect if two location is collied/overlappped
+ * @param loc1
+ * @param loc2
+ * @return true if collied, false otherwise
+ */
 bool is_collided(LOCATION loc1, LOCATION loc2)
 {
     int xA_0, xA_1, yA_0, yA_1;
@@ -320,6 +338,7 @@ bool is_collided(LOCATION loc1, LOCATION loc2)
     yB_0 = loc2.y  - (loc2.height/2) + 2;
     yB_1 = loc2.y  + (loc2.height/2) - 2;
 
+    // collision rule
     if ((((xA_0 < xB_0) && (xB_0 < xA_1)) || ((xA_0 < xB_1) && (xB_1 < xA_1)))
             && (((yA_0 < yB_0) && (yB_0 < yA_1))
                     || ((yA_0 < yB_1) && (yB_1 < yA_1))))
@@ -329,6 +348,12 @@ bool is_collided(LOCATION loc1, LOCATION loc2)
     return false;
 }
 
+/**
+ * Generate a random int with in the range (inclusive)
+ * @param lower
+ * @param upper
+ * @return random int
+ */
 int generate_random_in_range(int lower, int upper)
 {
     int num = (rand() % (upper - lower + 1)) + lower;

@@ -1,8 +1,8 @@
 /*
- * opt3001.h
+ * am_light.h
  *
- *  Created on: Oct 20, 2020
- *      Author: Joe Krachey
+ * Author: Hai Lin
+ * Author: Andres Quintanal Escandon
  */
 
 #ifndef AM_LIGHT_H_

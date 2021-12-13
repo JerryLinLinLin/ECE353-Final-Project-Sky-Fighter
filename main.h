@@ -1,8 +1,8 @@
 /*
  * main.h
  *
- *  Created on: Oct 19, 2020
- *      Author: Joe Krachey
+ * Author: Hai Lin
+ * Author: Andres Quintanal Escandon
  */
 
 #ifndef MAIN_H_

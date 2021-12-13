@@ -1,14 +1,16 @@
 /*
  * lcd.h
  *
- *  Created on: Sep 11, 2020
- *      Author: Andres Quintanal Escandon
+ * Author: Hai Lin
+ * Author: Andres Quintanal Escandon
  */
+
 #include "msp.h"
 
 #ifndef LCD_H_
 #define LCD_H_
 
+// LCD color
 #define LCD_COLOR_WHITE         0xFFFF
 #define LCD_COLOR_BLACK         0x0000
 #define LCD_COLOR_RED             0xF800
@@ -134,17 +136,6 @@ void lcd_draw_image(
   uint16_t fColor,
   uint16_t bColor
 );
-
-void lcd_draw_animation(
-        int x_start,
-        int y_start,
-        uint16_t image_width_pixels,
-        uint16_t image_height_pixels,
-        const uint8_t *image,
-        uint16_t fColor,
-        uint16_t bColor,
-        uint16_t step,
-        MOVE_DIR move_dir);
 
 /*******************************************************************************
 * Function Name: lcd_draw_line

@@ -1,8 +1,8 @@
 /*
- * opt3001.c
+ * am_light.c
  *
- *  Created on: Oct 20, 2020
- *      Author: Joe Krachey
+ * Author: Hai Lin
+ * Author: Andres Quintanal Escandon
  */
 
 #include <am_light.h>
@@ -21,7 +21,7 @@ void am_light_init(void)
     // delay
     for(i = 0; i < 50000; i++){};
 
-    // Program the CONFIG register to POWER_UP and bein CR_2 mode
+    // Program the CONFIG register to POWER_UP
     i2c_write_16(I2C_LIGHT_ADDR, I2C_LIGHT_CONFIG, AM_LIGHT_POWERUP);
 }
 
@@ -32,16 +32,14 @@ float am_light_get_lux(void)
 {
     uint16_t raw;
 
-    // Read the ambiant temperature
+    // Read the raw data from light sensor
     raw = i2c_read_16(I2C_LIGHT_ADDR, I2C_LIGHT_RESULT);
 
-    uint16_t exp = raw & 0xF000;
-    uint16_t frac = raw & 0x0FFF;
+    uint16_t exp = raw & 0xF000; // exponent
+    uint16_t frac = raw & 0x0FFF; // fraction
 
-    float lux = 0.01 * pow(2, exp) * frac;
+    float lux = 0.01 * pow(2, exp) * frac; // lux value
 
-    // Return the data in degrees C.  (See TMP006 Data Sheet)
-    // You will need to modify the line below to return this value
     return lux;
 }
 
