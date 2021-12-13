@@ -26,6 +26,7 @@
 #include <image.h>
 #include <buzzer.h>
 #include <task_adc_joy_acc.h>
+#include <task_song.h>
 #include <task_game_host.h>
 #include <task_game_npc.h>
 #include <task_game_controller.h>
@@ -42,11 +43,13 @@ TaskHandle_t Task_Game_NPC_Handle;
 TaskHandle_t Task_Game_Controller_Handle;
 TaskHandle_t Task_ADC_Joy_Acc_Bottom_Half_Handle;
 TaskHandle_t Task_ADC_Joy_Acc_Timer_Handle;
+TaskHandle_t Task_Song_Handle;
 
 // define queue
 QueueHandle_t Queue_Game_ADC_to_Host;
 QueueHandle_t Queue_Game_Host_to_NPC;
 QueueHandle_t Queue_Game_NPC_to_Host;
-QueueHandle_t Queue_Game_Host_to_Controller;
+QueueHandle_t Queue_Game_Host_NPC_to_Controller;
+QueueHandle_t Queue_Song;
 
 #endif /* MAIN_H_ */

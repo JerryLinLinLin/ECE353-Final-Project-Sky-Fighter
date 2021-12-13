@@ -27,7 +27,7 @@
  * Returns
  *      None
  *****************************************************/
-void buzzer_init(uint16_t ticks_period);
+void buzzer_init(void);
 
 /*****************************************************
  * Turns the Buzzer on
@@ -49,6 +49,8 @@ void buzzer_on(void);
  *      None
  *****************************************************/
 void buzzer_off(void);
+
+void play_tone(int ticks_period);
 
 /*****************************************************
  * Check Buzzer Run Status

@@ -33,6 +33,7 @@ void Task_Game_NPC(void *pvParameters)
 
     int a;
 
+
     while(1)
     {
 
@@ -119,6 +120,10 @@ void Task_Game_NPC(void *pvParameters)
                 printf("You has eliminated the enemy! Congratulation\n\r");
                 xSemaphoreGive(Sem_PRINT);
 
+                // send song
+                SOUND sound = NPC_KILLED;
+                xQueueSendToBack(Queue_Song, &sound, 0);
+
                 // render image with explosion
                 xSemaphoreTake(Sem_RENDER, portMAX_DELAY);
                 lcd_draw_image(
@@ -149,7 +154,7 @@ void Task_Game_NPC(void *pvParameters)
                     printf("YOU WIN! Congratulation\n\r");
                     xSemaphoreGive(Sem_PRINT);
                     bool win = true;
-                    xQueueSendToBack(Queue_Game_Host_to_Controller, &win, 0);
+                    xQueueSendToBack(Queue_Game_Host_NPC_to_Controller, &win, 0);
                     continue;
                 }
 

@@ -109,7 +109,7 @@ void Task_Game_Host(void *pvParameters)
             xSemaphoreTake(Sem_PRINT, portMAX_DELAY);
             printf("YOU LOST!\n\r");
             xSemaphoreGive(Sem_PRINT);
-            xQueueSendToBack(Queue_Game_Host_to_Controller, &win, 0);
+            xQueueSendToBack(Queue_Game_Host_NPC_to_Controller, &win, 0);
         }
         pre_is_collide = current_collide;
 
@@ -132,6 +132,10 @@ void Task_Game_Host(void *pvParameters)
             if (bullet_list[q].in_use) {
                 // if it is in boarder or hit npc
                 if (is_collided(npc_loc, bullet_list[q].loc)) {
+                    // send song
+                    SOUND sound = NPC_KILLED;
+                    xQueueSendToBack(Queue_Song, &sound, 0);
+
                     bool flash = 1;
                     xQueueSendToBack(Queue_Game_Host_to_NPC, &flash, 0);
 
@@ -217,6 +221,11 @@ void Task_Game_Host(void *pvParameters)
                     bullet_list[q].dir = current.joy;
                     bullet_list[q].loc.x = jet_loc.x;
                     bullet_list[q].loc.y = jet_loc.y;
+
+                    // send song
+                    SOUND sound = PLAYER_SHOOTING;
+                    xQueueSendToBack(Queue_Song, &sound, 0);
+
                     bypass = true;
                 }
             }

@@ -8,7 +8,7 @@
  * Returns:
  *      None
  */
-void buzzer_init(uint16_t ticks_period){
+void buzzer_init(void){
     //out
     BUZZER_PORT->DIR |= BUZZER_PIN;
 
@@ -18,12 +18,6 @@ void buzzer_init(uint16_t ticks_period){
 
     // turn timer off
     BUZZER_TIMER->CTL = 0;
-
-    // set period of timer & set PWM duty cycle to 50%
-    BUZZER_TIMER->CCR[0] = ticks_period - 1;
-
-    // set duty cycle to 50%
-    BUZZER_TIMER->CCR[BUZZER_CHANNEL] = (ticks_period / 2) - 1;
 
     // set in reset/set mode and use system clock
     BUZZER_TIMER->CCTL[BUZZER_CHANNEL] = TIMER_A_CCTLN_OUTMOD_7;
@@ -59,6 +53,11 @@ void buzzer_on(void){
 void buzzer_off(void){
     // turn off timer
     BUZZER_TIMER->CTL &= ~TIMER_A_CTL_MC_MASK;
+}
+
+void play_tone(int ticks_period) {
+    BUZZER_TIMER->CCR[0] = ticks_period - 1;
+    BUZZER_TIMER->CCR[BUZZER_CHANNEL] = ((ticks_period / 2) - 1);
 }
 
 /*

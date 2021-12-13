@@ -52,7 +52,8 @@ int main(void)
     Queue_Game_ADC_to_Host = xQueueCreate(100,sizeof(ADC_joy_acc_dir));
     Queue_Game_NPC_to_Host = xQueueCreate(100,sizeof(LOCATION));
     Queue_Game_Host_to_NPC = xQueueCreate(1,sizeof(bool));
-    Queue_Game_Host_to_Controller = xQueueCreate(1,sizeof(bool));
+    Queue_Game_Host_NPC_to_Controller = xQueueCreate(1,sizeof(bool));
+    Queue_Song = xQueueCreate(10, sizeof(SOUND));
 
     Sem_RENDER = xSemaphoreCreateBinary();
     xSemaphoreGive(Sem_RENDER);
@@ -61,14 +62,14 @@ int main(void)
     Sem_GAME_HOST = xSemaphoreCreateBinary();
     Sem_GAME_NPC = xSemaphoreCreateBinary();
 
-//    xTaskCreate
-//    (   Task_Console,
-//        "Task_Console",
-//        configMINIMAL_STACK_SIZE,
-//        NULL,
-//        1,
-//        &Task_Console_Handle
-//    );
+    xTaskCreate
+    (   Task_Song,
+        "Task_Song",
+        configMINIMAL_STACK_SIZE,
+        NULL,
+        1,
+        &Task_Song_Handle
+    );
 
     xTaskCreate
     (   Task_Game_Controller,

@@ -145,7 +145,7 @@ void Task_ADC_Joy_Acc_Bottom_Half(void *pvParameters)
             acc_dir.up = false;
         }
 
-        if((ACC_Z_DIR > (VOLT_0P99 - ACC_RANGE * 9)) &&  (ACC_Z_DIR < (VOLT_0P99 + ACC_RANGE * 9)))
+        if((ACC_Z_DIR > (VOLT_0P99 - ACC_RANGE * 10)) &&  (ACC_Z_DIR < (VOLT_0P99 + ACC_RANGE * 10)))
         {
             acc_dir.down = true;
         }
